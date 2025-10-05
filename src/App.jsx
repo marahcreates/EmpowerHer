@@ -150,28 +150,11 @@ function AppContent() {
 function App() {
   return (
     <VeChainKitProvider
-      network={{
-        type: 'test',
-        nodeUrl: 'https://testnet.vechain.org/',
-        genesisId: '0x000000000b2bce3c70bc649a02749e8687721b09ed2e15997f466536b20bb127'
-      }}
-      dappKit={{
-        nodeUrl: 'https://testnet.vechain.org/',
-        genesis: 'test',
-        walletConnectOptions: {
-          projectId: 'YOUR_WALLET_CONNECT_PROJECT_ID', 
-          metadata: {
-            name: 'Learn2Earn',
-            description: 'VeChain Education Platform',
-            url: window.location.origin,
-            icons: [`${window.location.origin}/logo.png`],
-          },
-        },
-        usePersistence: true,
-        useFirstDetectedSource: false,
-        allowedWallets: ['veworld', 'sync2', 'wallet-connect']
-      }}
-      loginMethods={['vechain', 'wallet']}
+      nodeUrl="https://testnet.vechain.org/"
+      genesis="test"
+      usePersistence={true}
+      requireCertificate={false}
+      logLevel="DEBUG"
     >
       <TransactionModalProvider>
         <AppContent />
