@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = '0xb4e6da56300b24cec34d9a801f1eb91a21c62a3f';
+export const CONTRACT_ADDRESS = '0xb848c1cefc304080d7af73ebac59f8c9e68381bf';
 
 export const CONTRACT_ABI = [
   {
@@ -12,54 +12,148 @@ export const CONTRACT_ABI = [
     stateMutability: 'payable'
   },
   {
-    name: 'submitProof',
+    name: 'students',
     type: 'function',
     inputs: [
-      { name: 'proof', type: 'string' }
+      { name: '', type: 'address' }
+    ],
+    outputs: [
+      { name: 'wallet', type: 'address' },
+      { name: 'name', type: 'string' },
+      { name: 'familyName', type: 'string' },
+      { name: 'registered', type: 'bool' },
+      { name: 'graduated', type: 'bool' },
+      { name: 'certificate', type: 'bytes32' }
+    ],
+    stateMutability: 'view'
+  },
+  {
+    name: 'completeCourse',
+    type: 'function',
+    inputs: [
+      { name: 'courseId', type: 'string' }
     ],
     outputs: [],
     stateMutability: 'nonpayable'
   },
   {
-    name: 'gradeSubmission',
+    name: 'isCourseCompleted',
     type: 'function',
     inputs: [
       { name: 'studentAddress', type: 'address' },
-      { name: 'approved', type: 'bool' }
+      { name: 'courseId', type: 'string' }
+    ],
+    outputs: [
+      { name: '', type: 'bool' }
+    ],
+    stateMutability: 'view'
+  },
+  {
+    name: 'updateProfile',
+    type: 'function',
+    inputs: [
+      { name: '_profilePicture', type: 'string' },
+      { name: '_bio', type: 'string' },
+      { name: '_experience', type: 'string' },
+      { name: '_skills', type: 'string' },
+      { name: '_lookingForReferral', type: 'bool' }
     ],
     outputs: [],
     stateMutability: 'nonpayable'
   },
   {
-    name: 'isGraded',
+    name: 'getProfile',
     type: 'function',
     inputs: [
-      { name: 'studentAddress', type: 'address' }
+      { name: 'userAddress', type: 'address' }
     ],
     outputs: [
-      { name: '', type: 'bool' }
+      { name: 'profilePicture', type: 'string' },
+      { name: 'bio', type: 'string' },
+      { name: 'experience', type: 'string' },
+      { name: 'skills', type: 'string' },
+      { name: 'lookingForReferral', type: 'bool' },
+      { name: 'profileCreated', type: 'bool' }
     ],
     stateMutability: 'view'
   },
   {
-    name: 'isRewarded',
+    name: 'getCompletedCourses',
     type: 'function',
     inputs: [
       { name: 'studentAddress', type: 'address' }
     ],
     outputs: [
-      { name: '', type: 'bool' }
+      { name: '', type: 'string[]' }
     ],
     stateMutability: 'view'
   },
   {
-    name: 'getSubmission',
+    name: 'referUser',
     type: 'function',
     inputs: [
-      { name: 'studentAddress', type: 'address' }
+      { name: '_referee', type: 'address' }
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable'
+  },
+  {
+    name: 'confirmReferral',
+    type: 'function',
+    inputs: [
+      { name: '_referrer', type: 'address' }
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable'
+  },
+  {
+    name: 'claimReferralReward',
+    type: 'function',
+    inputs: [
+      { name: '_referee', type: 'address' }
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable'
+  },
+  {
+    name: 'getReferralsReceived',
+    type: 'function',
+    inputs: [
+      { name: 'userAddress', type: 'address' }
     ],
     outputs: [
-      { name: '', type: 'string' }
+      {
+        name: '',
+        type: 'tuple[]',
+        components: [
+          { name: 'referrer', type: 'address' },
+          { name: 'referee', type: 'address' },
+          { name: 'timestamp', type: 'uint256' },
+          { name: 'confirmed', type: 'bool' },
+          { name: 'rewardClaimed', type: 'bool' }
+        ]
+      }
+    ],
+    stateMutability: 'view'
+  },
+  {
+    name: 'getReferralsGiven',
+    type: 'function',
+    inputs: [
+      { name: 'userAddress', type: 'address' }
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple[]',
+        components: [
+          { name: 'referrer', type: 'address' },
+          { name: 'referee', type: 'address' },
+          { name: 'timestamp', type: 'uint256' },
+          { name: 'confirmed', type: 'bool' },
+          { name: 'rewardClaimed', type: 'bool' }
+        ]
+      }
     ],
     stateMutability: 'view'
   }

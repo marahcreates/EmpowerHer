@@ -98,8 +98,19 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
           type: 'success',
           message: 'Registration submitted! Transaction is being processed.'
         });
-        
+
         await waitForTransaction(result.txid);
+
+        // Notify backend about registration
+        try {
+          await fetch('http://localhost:3001/api/students/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ address: account })
+          });
+        } catch (err) {
+          console.error('Failed to notify backend:', err);
+        }
       }
     } catch (error) {
       console.error('Error registering student:', error);

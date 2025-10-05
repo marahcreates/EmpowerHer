@@ -1,137 +1,237 @@
 import React, { useState, useEffect } from 'react';
-import { DAppKitProvider } from '@vechain/dapp-kit-react';
+import { DAppKitProvider, useConnex, useWallet } from '@vechain/dapp-kit-react';
 import WalletConnection from './components/WalletConnection';
 import StudentRegistration from './components/StudentRegistration';
-import ProofSubmissionForm from './components/ProofSubmissionForm';
-import ClaimReward from './components/ClaimReward';
-import { checkSubmissionStatus } from './services/api';
-import { CONTRACT_ADDRESS } from './config/contract';
+import LearningPaths from './components/LearningPaths';
+import CourseRouter from './components/CourseRouter';
+import Profile from './components/Profile';
+import Referrals from './components/Referrals';
+import MyReferrals from './components/MyReferrals';
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from './config/contract';
 
 function AppContent() {
   const [account, setAccount] = useState(null);
-  const [submissionStatus, setSubmissionStatus] = useState(null);
-  const [isApproved, setIsApproved] = useState(false);
-  const [isClaimed, setIsClaimed] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [completedCourses, setCompletedCourses] = useState({});
+  const [currentView, setCurrentView] = useState('courses'); // 'courses', 'profile', 'referrals', 'my-referrals'
+  const connex = useConnex();
 
   useEffect(() => {
-    if (account) {
+    if (account && connex) {
       checkStatus();
     }
-  }, [account]);
+  }, [account, connex]);
 
   const checkStatus = async () => {
     try {
-      // Check backend API status
-      const status = await checkSubmissionStatus(account);
-      setSubmissionStatus(status);
-      
-      // If we have backend data, use it to set all states
-      if (status) {
-        const approved = status.approved === true;
-        const claimed = status.claimed === true;
-        
-        setIsApproved(approved);
-        setIsClaimed(claimed);
-        
-        // If they have submitted, approved, or claimed - they must be registered
-        if (status.submitted || status.approved || status.claimed) {
-          setIsRegistered(true);
+      // Check if student is registered
+      const studentMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+        CONTRACT_ABI.find(abi => abi.name === 'students')
+      );
+      const studentResult = await studentMethod.call(account);
+      setIsRegistered(studentResult.decoded.registered);
+
+      // Check completed courses - all 18 courses
+      const courseIds = [
+        // Coding track
+        'python-basics', 'javascript-intro', 'java-fundamentals', 'cpp-basics', 'data-structures', 'algorithms',
+        // Web Development track
+        'html-basics', 'css-styling', 'react-intro', 'nodejs-backend', 'rest-apis', 'fullstack-app',
+        // Blockchain track
+        'blockchain-basics', 'cryptocurrency', 'smart-contracts', 'solidity-basics', 'defi-fundamentals', 'nft-development'
+      ];
+      const completed = {};
+
+      for (const courseId of courseIds) {
+        try {
+          const completedMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+            CONTRACT_ABI.find(abi => abi.name === 'isCourseCompleted')
+          );
+          const result = await completedMethod.call(account, courseId);
+          completed[courseId] = result.decoded[0];
+        } catch (error) {
+          completed[courseId] = false;
         }
       }
+
+      setCompletedCourses(completed);
     } catch (error) {
       console.error('Error checking status:', error);
     }
   };
 
-  const handleSubmissionSuccess = () => {
-    setSubmissionStatus({ submitted: true, approved: false });
-    setTimeout(checkStatus, 2000);
-  };
-
   const handleRegistrationSuccess = () => {
     setIsRegistered(true);
-    setTimeout(() => {
-      checkStatus();
-    }, 2000);
   };
+
+  const handleCourseComplete = (courseId) => {
+    setCompletedCourses(prev => ({ ...prev, [courseId]: true }));
+    setSelectedCourse(null);
+  };
+
+  const handleSelectCourse = (courseId) => {
+    if (completedCourses[courseId]) {
+      alert('You have already completed this course!');
+      return;
+    }
+    setSelectedCourse(courseId);
+  };
+
+  const handleBackToCourses = () => {
+    setSelectedCourse(null);
+  };
+
+  const totalCompleted = Object.values(completedCourses).filter(Boolean).length;
 
   return (
     <div className="container">
       <header className="header">
         <h1>Learn2Earn</h1>
-        <p>Complete learning tasks and earn B3TR tokens</p>
+        <p>Empowering Women in Tech - Learn and Earn B3TR Tokens</p>
+        {isRegistered && (
+          <div style={{
+            marginTop: '10px',
+            padding: '10px 20px',
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            color: 'white',
+            borderRadius: '20px',
+            display: 'inline-block',
+            fontSize: '0.9rem'
+          }}>
+            🏆 Courses Completed: {totalCompleted}/18
+          </div>
+        )}
       </header>
 
       <div className="wallet-section">
         <WalletConnection onAccountChange={setAccount} />
       </div>
 
+      {isRegistered && (
+        <div className="navigation-tabs" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '15px',
+          marginBottom: '20px',
+          flexWrap: 'wrap'
+        }}>
+          <button
+            onClick={() => {
+              setCurrentView('profile');
+              setSelectedCourse(null);
+            }}
+            style={{
+              background: currentView === 'profile' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
+              color: currentView === 'profile' ? 'white' : '#2c3e50',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              transition: 'all 0.3s'
+            }}
+          >
+            👤 Profile
+          </button>
+          <button
+            onClick={() => {
+              setCurrentView('courses');
+              setSelectedCourse(null);
+            }}
+            style={{
+              background: currentView === 'courses' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
+              color: currentView === 'courses' ? 'white' : '#2c3e50',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              transition: 'all 0.3s'
+            }}
+          >
+            📚 Courses
+          </button>
+          <button
+            onClick={() => {
+              setCurrentView('referrals');
+              setSelectedCourse(null);
+            }}
+            style={{
+              background: currentView === 'referrals' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
+              color: currentView === 'referrals' ? 'white' : '#2c3e50',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              transition: 'all 0.3s'
+            }}
+          >
+            👥 Referrals
+          </button>
+          <button
+            onClick={() => {
+              setCurrentView('my-referrals');
+              setSelectedCourse(null);
+            }}
+            style={{
+              background: currentView === 'my-referrals' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
+              color: currentView === 'my-referrals' ? 'white' : '#2c3e50',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              transition: 'all 0.3s'
+            }}
+          >
+            🤝 My Referrals
+          </button>
+        </div>
+      )}
+
       {account && (
         <>
           {!isRegistered && (
-            <StudentRegistration 
-              account={account} 
+            <StudentRegistration
+              account={account}
               onRegistrationSuccess={handleRegistrationSuccess}
               onRegistrationStatusChange={setIsRegistered}
             />
           )}
 
-          {isRegistered && (
-            <>
-              {/* Show final claimed state */}
-              {(isClaimed || submissionStatus?.claimed) ? (
-                <div className="card">
-                  <div className="reward-section">
-                    <h3>✅ Reward Successfully Claimed!</h3>
-                    <p>Your B3TR tokens have been distributed to your wallet.</p>
-                    <div className="status-message success">
-                      Claimed on: {new Date(submissionStatus?.claimedAt).toLocaleDateString()}
-                    </div>
-                    {submissionStatus?.transactionHash && (
-                      <div style={{ marginTop: '1rem' }}>
-                        <a
-                          href={`https://explore-testnet.vechain.org/transactions/${submissionStatus.transactionHash}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            display: 'inline-block',
-                            padding: '0.5rem 1rem',
-                            backgroundColor: '#007bff',
-                            color: 'white',
-                            textDecoration: 'none',
-                            borderRadius: '4px',
-                            fontSize: '0.9rem'
-                          }}
-                        >
-                          View Transaction on Explorer
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (isApproved || submissionStatus?.approved) ? (
-                /* Show claim reward section */
-                <div className="card">
-                  <ClaimReward account={account} />
-                </div>
-              ) : (
-                /* Show submission form and status */
-                <div className="card">
-                  <h2>Submit Your Proof of Learning</h2>
-                  <ProofSubmissionForm 
-                    account={account}
-                    onSubmissionSuccess={handleSubmissionSuccess}
-                    disabled={submissionStatus?.submitted}
-                  />
-                  {submissionStatus?.submitted && !submissionStatus?.approved && (
-                    <div className="status-message info">
-                      Your submission is under review. Please check back later.
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
+          {isRegistered && currentView === 'profile' && !selectedCourse && (
+            <Profile account={account} connex={connex} />
+          )}
+
+          {isRegistered && currentView === 'courses' && !selectedCourse && (
+            <LearningPaths
+              onSelectCourse={handleSelectCourse}
+              completedCourses={completedCourses}
+            />
+          )}
+
+          {isRegistered && currentView === 'referrals' && !selectedCourse && (
+            <Referrals account={account} connex={connex} />
+          )}
+
+          {isRegistered && currentView === 'my-referrals' && !selectedCourse && (
+            <MyReferrals account={account} connex={connex} />
+          )}
+
+          {isRegistered && selectedCourse && (
+            <CourseRouter
+              courseId={selectedCourse}
+              connex={connex}
+              account={account}
+              onComplete={handleCourseComplete}
+              onBack={handleBackToCourses}
+            />
           )}
         </>
       )}

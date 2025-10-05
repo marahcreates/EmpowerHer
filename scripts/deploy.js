@@ -26,13 +26,10 @@ async function main() {
   const learn2Earn = await Learn2Earn.deploy(
     INSTITUTE_NAME,
     X2EARN_REWARDS_POOL,
-    APP_ID,
-    {
-      gasLimit: 3000000  // Set a reasonable gas limit
-    }
+    APP_ID
   );
 
-  // Wait for deployment
+  // Wait for deployment with increased timeout
   await learn2Earn.waitForDeployment();
   
   const contractAddress = await learn2Earn.getAddress();
