@@ -1,5 +1,5 @@
 .profile-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 20px auto;
   padding: 20px;
 }
@@ -13,75 +13,105 @@
 
 .profile-header h2 {
   margin: 0;
-  color: #2c3e50;
-  font-size: 2rem;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 .edit-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #D092C3;
+  color: #161315;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 1rem;
-  transition: transform 0.2s;
+  font-weight: 600;
+  transition: background 0.3s;
 }
 
 .edit-button:hover {
-  transform: translateY(-2px);
+  background: #b877a8;
+}
+
+.delete-button {
+  background: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  padding: 12px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.delete-button:hover {
+  background: rgba(220, 53, 69, 0.3);
+  border-color: #dc3545;
 }
 
 .profile-form {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #161315;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(208, 146, 195, 0.2);
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 8px;
-  color: #2c3e50;
+  margin-bottom: 10px;
+  color: white;
   font-weight: 600;
+  font-size: 1.05rem;
 }
 
 .form-group input[type="text"],
 .form-group textarea {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  padding: 14px 16px;
+  border: 2px solid rgba(208, 146, 195, 0.3);
+  border-radius: 12px;
   font-size: 1rem;
   font-family: inherit;
   transition: border-color 0.3s;
+  background: #191A1F;
+  color: white;
 }
 
 .form-group input[type="text"]:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #D092C3;
+}
+
+.form-group input[type="text"]::placeholder,
+.form-group textarea::placeholder {
+  color: #888;
 }
 
 .checkbox-group label {
   display: flex;
   align-items: center;
   cursor: pointer;
+  color: #CFCFCF;
 }
 
 .checkbox-group input[type="checkbox"] {
   width: 20px;
   height: 20px;
-  margin-right: 10px;
+  margin-right: 12px;
   cursor: pointer;
+  accent-color: #D092C3;
 }
 
 .checkbox-group span {
-  font-size: 1rem;
+  font-size: 1.05rem;
 }
 
 .form-actions {
@@ -91,19 +121,19 @@
 }
 
 .save-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #D092C3;
+  color: #161315;
   border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
+  padding: 14px 36px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  transition: transform 0.2s;
+  transition: background 0.3s;
 }
 
 .save-button:hover:not(:disabled) {
-  transform: translateY(-2px);
+  background: #b877a8;
 }
 
 .save-button:disabled {
@@ -112,32 +142,35 @@
 }
 
 .cancel-button {
-  background: #e0e0e0;
-  color: #2c3e50;
+  background: rgba(208, 146, 195, 0.2);
+  color: #CFCFCF;
   border: none;
-  padding: 12px 30px;
-  border-radius: 8px;
+  padding: 14px 36px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: background 0.3s;
 }
 
 .cancel-button:hover {
-  background: #d0d0d0;
+  background: rgba(208, 146, 195, 0.3);
 }
 
 .profile-view {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #161315;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(208, 146, 195, 0.2);
 }
 
 .profile-info-section {
   display: flex;
-  gap: 30px;
-  margin-bottom: 40px;
+  gap: 40px;
+  margin-bottom: 50px;
+  padding-bottom: 40px;
+  border-bottom: 2px solid rgba(208, 146, 195, 0.2);
 }
 
 .profile-picture {
@@ -145,11 +178,11 @@
 }
 
 .profile-picture img {
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #667eea;
+  border: 5px solid #D092C3;
 }
 
 .profile-details {
@@ -157,88 +190,102 @@
 }
 
 .student-info h3 {
-  margin: 0 0 5px 0;
-  color: #2c3e50;
-  font-size: 1.8rem;
+  margin: 0 0 8px 0;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 700;
 }
 
 .wallet-address {
-  color: #666;
-  font-size: 0.9rem;
-  margin: 0 0 20px 0;
+  color: #888;
+  font-size: 0.95rem;
+  margin: 0 0 30px 0;
   font-family: monospace;
 }
 
 .info-block {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .info-block h4 {
-  margin: 0 0 10px 0;
-  color: #667eea;
-  font-size: 1.1rem;
+  margin: 0 0 12px 0;
+  color: #D092C3;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .info-block p {
   margin: 0;
-  color: #555;
-  line-height: 1.6;
+  color: #CFCFCF;
+  line-height: 1.7;
+  font-size: 1.05rem;
 }
 
 .skills-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
   margin-top: 10px;
 }
 
 .skill-tag {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 6px 14px;
+  background: rgba(208, 146, 195, 0.2);
+  color: #D092C3;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .referral-badge {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
+  background: rgba(208, 146, 195, 0.2);
+  color: #D092C3;
+  padding: 14px 24px;
+  border-radius: 30px;
   display: inline-block;
-  margin-top: 15px;
+  margin-top: 20px;
   font-weight: 600;
+  border: 1px solid rgba(208, 146, 195, 0.3);
 }
 
 .completed-courses-section {
-  border-top: 2px solid #e0e0e0;
   padding-top: 30px;
 }
 
 .completed-courses-section h3 {
-  margin: 0 0 20px 0;
-  color: #2c3e50;
-  font-size: 1.5rem;
+  margin: 0 0 25px 0;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .courses-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
 }
 
 .course-badge {
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-  border: 2px solid #667eea;
-  padding: 12px 16px;
-  border-radius: 8px;
-  color: #2c3e50;
+  background: rgba(208, 146, 195, 0.1);
+  border: 2px solid rgba(208, 146, 195, 0.3);
+  padding: 16px 20px;
+  border-radius: 12px;
+  color: white;
   font-weight: 500;
+  font-size: 1.05rem;
+  transition: all 0.3s;
+}
+
+.course-badge:hover {
+  background: rgba(208, 146, 195, 0.2);
+  border-color: #D092C3;
+  transform: translateY(-2px);
 }
 
 .no-courses {
-  color: #999;
+  color: #888;
   font-style: italic;
+  font-size: 1.05rem;
 }
 
 @media (max-width: 768px) {

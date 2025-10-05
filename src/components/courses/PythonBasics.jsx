@@ -154,7 +154,7 @@ for fruit in fruits:
   }
 ];
 
-const PythonBasics = ({ walletAddress, onComplete, connex }) => {
+const PythonBasics = ({ walletAddress, onComplete, connex, onBack }) => {
   const [currentModule, setCurrentModule] = useState(0);
   const [completedModules, setCompletedModules] = useState(new Set());
   const [showHint, setShowHint] = useState(false);
@@ -205,39 +205,29 @@ const PythonBasics = ({ walletAddress, onComplete, connex }) => {
 
   return (
     <div className="python-course">
-      {/* Header */}
+      {/* Header with Back Button and Module Navigation */}
       <div className="course-header">
+        <button className="back-btn" onClick={onBack}>
+          ← Back to Courses
+        </button>
         <div className="course-title">
           <h1>Python Basics</h1>
           <p>Interactive Course</p>
         </div>
-        <div className="progress-section">
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <span className="progress-text">
-            {completedModules.size} / {PYTHON_MODULES.length} modules
-          </span>
+        <div className="module-nav">
+          {PYTHON_MODULES.map((mod, idx) => (
+            <button
+              key={mod.id}
+              className={`module-nav-item ${
+                idx === currentModule ? 'active' : ''
+              } ${completedModules.has(idx) ? 'completed' : ''}`}
+              onClick={() => setCurrentModule(idx)}
+            >
+              <span className="module-number">{idx + 1}</span>
+              {completedModules.has(idx) && <span className="check-mark">✓</span>}
+            </button>
+          ))}
         </div>
-      </div>
-
-      {/* Module Navigation */}
-      <div className="module-nav">
-        {PYTHON_MODULES.map((mod, idx) => (
-          <button
-            key={mod.id}
-            className={`module-nav-item ${
-              idx === currentModule ? 'active' : ''
-            } ${completedModules.has(idx) ? 'completed' : ''}`}
-            onClick={() => setCurrentModule(idx)}
-          >
-            <span className="module-number">{idx + 1}</span>
-            {completedModules.has(idx) && <span className="check-mark">✓</span>}
-          </button>
-        ))}
       </div>
 
       {/* Main Content */}

@@ -55,7 +55,7 @@ const Referrals = ({ account, connex }) => {
   if (loading) {
     return (
       <div className="referrals-container">
-        <h2>👥 People Looking for Referrals</h2>
+        <h2>People Looking for Referrals</h2>
         <p>Loading...</p>
       </div>
     );
@@ -64,7 +64,7 @@ const Referrals = ({ account, connex }) => {
   if (usersLookingForReferrals.length === 0) {
     return (
       <div className="referrals-container">
-        <h2>👥 People Looking for Referrals</h2>
+        <h2>People Looking for Referrals</h2>
         <div className="no-users">
           <p>No users are currently looking for job referrals.</p>
           <p>Check back later!</p>
@@ -75,7 +75,7 @@ const Referrals = ({ account, connex }) => {
 
   return (
     <div className="referrals-container">
-      <h2>👥 People Looking for Referrals</h2>
+      <h2>People Looking for Referrals</h2>
       <p className="subtitle">Help connect talented individuals with job opportunities</p>
 
       {!selectedUser ? (
@@ -138,21 +138,21 @@ const Referrals = ({ account, connex }) => {
 
               {selectedUser.bio && (
                 <div className="detail-section">
-                  <h3>📝 About</h3>
+                  <h3>About</h3>
                   <p>{selectedUser.bio}</p>
                 </div>
               )}
 
               {selectedUser.experience && (
                 <div className="detail-section">
-                  <h3>💼 Experience</h3>
+                  <h3>Experience</h3>
                   <p>{selectedUser.experience}</p>
                 </div>
               )}
 
               {selectedUser.skills && (
                 <div className="detail-section">
-                  <h3>🛠️ Skills</h3>
+                  <h3>Skills</h3>
                   <div className="skills-full">
                     {selectedUser.skills.split(',').map((skill, idx) => (
                       <span key={idx} className="skill-tag">{skill.trim()}</span>
@@ -167,7 +167,7 @@ const Referrals = ({ account, connex }) => {
                   onClick={() => handleRefer(selectedUser.address)}
                   disabled={referring}
                 >
-                  {referring ? 'Submitting Referral...' : '🤝 Refer This Person'}
+                  {referring ? 'Submitting Referral...' : 'Refer This Person'}
                 </button>
                 <p className="refer-note">
                   By clicking refer, you're helping {selectedUser.name} connect with job opportunities.

@@ -16,6 +16,8 @@ const Profile = ({ account, connex }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [studentInfo, setStudentInfo] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (account && connex) {
@@ -54,6 +56,8 @@ const Profile = ({ account, connex }) => {
         lookingForReferral: profileResult.decoded.lookingForReferral || false,
         profileCreated: profileResult.decoded.profileCreated || false
       });
+
+      // Note: accountDeleted field exists in contract but not needed in component state
 
       // Load completed courses
       const coursesMethod = connex.thor.account(CONTRACT_ADDRESS).method(
@@ -112,6 +116,34 @@ const Profile = ({ account, connex }) => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+
+    try {
+      // Call deleteAccount function on smart contract
+      const deleteAccountMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+        CONTRACT_ABI.find(abi => abi.name === 'deleteAccount')
+      );
+
+      const clause = deleteAccountMethod.asClause();
+
+      await connex.vendor.sign('tx', [clause])
+        .signer(account)
+        .request();
+
+      alert('Account deleted successfully! You will need to verify again next time you connect.');
+      setShowDeleteConfirm(false);
+
+      // Log out the user after deletion
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      alert('Failed to delete account: ' + (error.message || 'Unknown error'));
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const courseNameMap = {
     'python-basics': 'Python Basics',
     'javascript-intro': 'JavaScript Introduction',
@@ -140,16 +172,91 @@ const Profile = ({ account, connex }) => {
   return (
     <div className="profile-container">
       <div className="profile-header">
-        <h2>👤 My Profile</h2>
-        {!isEditing && (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="edit-button"
-          >
-            ✏️ Edit Profile
-          </button>
-        )}
+        <h2>My Profile</h2>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          {!isEditing && (
+            <>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="edit-button"
+              >
+                Edit Profile
+              </button>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="delete-button"
+              >
+                Delete Account
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      {showDeleteConfirm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.8)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            background: '#161315',
+            borderRadius: '20px',
+            padding: '40px',
+            maxWidth: '500px',
+            border: '1px solid rgba(208, 146, 195, 0.2)',
+            boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)'
+          }}>
+            <h3 style={{ color: 'white', marginBottom: '1rem', fontSize: '1.8rem' }}>
+              Delete Account?
+            </h3>
+            <p style={{ color: '#CFCFCF', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+              This will clear your profile data. Note that your blockchain registration
+              and course completions will remain on-chain and cannot be deleted.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deleting}
+                style={{
+                  background: 'rgba(208, 146, 195, 0.2)',
+                  color: '#CFCFCF',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '30px',
+                  cursor: 'pointer',
+                  fontWeight: '600'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleting}
+                style={{
+                  background: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  padding: '12px 24px',
+                  borderRadius: '30px',
+                  cursor: deleting ? 'not-allowed' : 'pointer',
+                  fontWeight: '600',
+                  opacity: deleting ? 0.6 : 1
+                }}
+              >
+                {deleting ? 'Deleting...' : 'Delete Account'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {isEditing ? (
         <form onSubmit={handleSubmit} className="profile-form">
@@ -236,7 +343,7 @@ const Profile = ({ account, connex }) => {
             <div className="profile-details">
               {studentInfo && (
                 <div className="student-info">
-                  <h3>{studentInfo.name} {studentInfo.familyName}</h3>
+                  <h3>Verified Member</h3>
                   <p className="wallet-address">{account?.slice(0, 6)}...{account?.slice(-4)}</p>
                 </div>
               )}
@@ -268,19 +375,19 @@ const Profile = ({ account, connex }) => {
 
               {profile.lookingForReferral && (
                 <div className="referral-badge">
-                  💼 Looking for job referrals
+                  Looking for job referrals
                 </div>
               )}
             </div>
           </div>
 
           <div className="completed-courses-section">
-            <h3>🏆 Completed Courses ({completedCourses.length}/18)</h3>
+            <h3>Completed Courses ({completedCourses.length}/18)</h3>
             {completedCourses.length > 0 ? (
               <div className="courses-grid">
                 {completedCourses.map((courseId, index) => (
                   <div key={index} className="course-badge">
-                    ✅ {courseNameMap[courseId] || courseId}
+                    {courseNameMap[courseId] || courseId}
                   </div>
                 ))}
               </div>

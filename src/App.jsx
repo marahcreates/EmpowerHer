@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DAppKitProvider, useConnex, useWallet } from '@vechain/dapp-kit-react';
+import LandingPage from './components/LandingPage';
 import WalletConnection from './components/WalletConnection';
 import StudentRegistration from './components/StudentRegistration';
 import LearningPaths from './components/LearningPaths';
@@ -10,18 +11,114 @@ import MyReferrals from './components/MyReferrals';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from './config/contract';
 
 function AppContent() {
+  const [showApp, setShowApp] = useState(false);
   const [account, setAccount] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [completedCourses, setCompletedCourses] = useState({});
   const [currentView, setCurrentView] = useState('courses'); // 'courses', 'profile', 'referrals', 'my-referrals'
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [checkingStatus, setCheckingStatus] = useState(false);
   const connex = useConnex();
+  const { account: walletAccount, disconnect } = useWallet();
 
   useEffect(() => {
-    if (account && connex) {
-      checkStatus();
+    // If wallet connects (either auto or manual), check status
+    if (walletAccount && connex && !checkingStatus) {
+      setAccount(walletAccount);
+      if (!showApp) {
+        // Auto-connecting at startup
+        checkStatusAndShowApp(walletAccount);
+      } else {
+        // Manual connection from landing page
+        checkStatusForConnectedWallet(walletAccount);
+      }
     }
-  }, [account, connex]);
+  }, [walletAccount, connex]);
+
+
+  const checkStatusAndShowApp = async (walletAddr) => {
+    setCheckingStatus(true);
+    try {
+      // Check if student is registered
+      const studentMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+        CONTRACT_ABI.find(abi => abi.name === 'students')
+      );
+      const studentResult = await studentMethod.call(walletAddr);
+      const blockchainRegistered = studentResult.decoded.registered;
+
+      // Check if account was deleted
+      const profileMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+        CONTRACT_ABI.find(abi => abi.name === 'getProfile')
+      );
+      const profileResult = await profileMethod.call(walletAddr);
+      const accountDeleted = profileResult.decoded.accountDeleted || false;
+
+      // If account was deleted, require verification again
+      if (blockchainRegistered && accountDeleted) {
+        setIsRegistered(false);
+      } else {
+        setIsRegistered(blockchainRegistered);
+      }
+
+      // Now show the app
+      setShowApp(true);
+    } catch (error) {
+      console.error('Error checking status:', error);
+      // Show app anyway on error
+      setShowApp(true);
+    } finally {
+      setCheckingStatus(false);
+    }
+  };
+
+  const checkStatusForConnectedWallet = async (walletAddr) => {
+    setCheckingStatus(true);
+    try {
+      // Check if student is registered
+      const studentMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+        CONTRACT_ABI.find(abi => abi.name === 'students')
+      );
+      const studentResult = await studentMethod.call(walletAddr);
+      const blockchainRegistered = studentResult.decoded.registered;
+
+      // Check if account was deleted
+      const profileMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+        CONTRACT_ABI.find(abi => abi.name === 'getProfile')
+      );
+      const profileResult = await profileMethod.call(walletAddr);
+      const accountDeleted = profileResult.decoded.accountDeleted || false;
+
+      // If account was deleted, require verification again
+      if (blockchainRegistered && accountDeleted) {
+        setIsRegistered(false);
+      } else {
+        setIsRegistered(blockchainRegistered);
+      }
+    } catch (error) {
+      console.error('Error checking status:', error);
+    } finally {
+      setCheckingStatus(false);
+    }
+  };
+
+  if (!showApp || checkingStatus) {
+    return checkingStatus ? (
+      <div style={{
+        minHeight: '100vh',
+        background: '#191A1F',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: '1.2rem'
+      }}>
+        Checking verification status...
+      </div>
+    ) : (
+      <LandingPage onGetStarted={() => setShowApp(true)} />
+    );
+  }
 
   const checkStatus = async () => {
     try {
@@ -30,14 +127,26 @@ function AppContent() {
         CONTRACT_ABI.find(abi => abi.name === 'students')
       );
       const studentResult = await studentMethod.call(account);
-      setIsRegistered(studentResult.decoded.registered);
+      const blockchainRegistered = studentResult.decoded.registered;
 
-      // Check completed courses - all 18 courses
+      // Check if account was deleted
+      const profileMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+        CONTRACT_ABI.find(abi => abi.name === 'getProfile')
+      );
+      const profileResult = await profileMethod.call(account);
+      const accountDeleted = profileResult.decoded.accountDeleted || false;
+
+      // If account was deleted, require verification again
+      if (blockchainRegistered && accountDeleted) {
+        setIsRegistered(false);
+      } else {
+        setIsRegistered(blockchainRegistered);
+      }
+
+      // Check completed courses - all 12 courses
       const courseIds = [
         // Coding track
         'python-basics', 'javascript-intro', 'java-fundamentals', 'cpp-basics', 'data-structures', 'algorithms',
-        // Web Development track
-        'html-basics', 'css-styling', 'react-intro', 'nodejs-backend', 'rest-apis', 'fullstack-app',
         // Blockchain track
         'blockchain-basics', 'cryptocurrency', 'smart-contracts', 'solidity-basics', 'defi-fundamentals', 'nft-development'
       ];
@@ -85,115 +194,86 @@ function AppContent() {
   const totalCompleted = Object.values(completedCourses).filter(Boolean).length;
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1>Learn2Earn</h1>
-        <p>Empowering Women in Tech - Learn and Earn B3TR Tokens</p>
-        {isRegistered && (
-          <div style={{
-            marginTop: '10px',
-            padding: '10px 20px',
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            color: 'white',
-            borderRadius: '20px',
-            display: 'inline-block',
-            fontSize: '0.9rem'
-          }}>
-            🏆 Courses Completed: {totalCompleted}/18
+    <div className="dashboard">
+      {/* Dashboard Header */}
+      <header className="dashboard-header">
+        <div className="dashboard-header-content">
+          <div className="dashboard-logo">
+            <span className="logo-icon">◆</span>
+            <span className="logo-text">EmpowerHer</span>
           </div>
-        )}
+
+          {isRegistered && (
+            <nav className="dashboard-nav">
+              <button
+                onClick={() => {
+                  setCurrentView('courses');
+                  setSelectedCourse(null);
+                }}
+                className={currentView === 'courses' ? 'nav-link active' : 'nav-link'}
+              >
+                Courses
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentView('referrals');
+                  setSelectedCourse(null);
+                }}
+                className={currentView === 'referrals' ? 'nav-link active' : 'nav-link'}
+              >
+                Referrals
+              </button>
+            </nav>
+          )}
+
+          <div className="dashboard-header-right">
+            {!account && <WalletConnection onAccountChange={setAccount} />}
+            {account && (
+              <div className="profile-menu-wrapper">
+                <button
+                  className="profile-avatar"
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                >
+                  <div className="avatar-circle">
+                    {account.substring(2, 4).toUpperCase()}
+                  </div>
+                </button>
+                {showProfileMenu && (
+                  <div className="profile-dropdown">
+                    <button
+                      onClick={() => {
+                        setCurrentView('profile');
+                        setSelectedCourse(null);
+                        setShowProfileMenu(false);
+                      }}
+                      className="dropdown-item"
+                    >
+                      Profile
+                    </button>
+                    <button
+                      onClick={async () => {
+                        setShowProfileMenu(false);
+                        setAccount(null);
+                        setIsRegistered(false);
+                        setShowApp(false);
+                        // Disconnect wallet
+                        if (disconnect) {
+                          await disconnect();
+                        }
+                      }}
+                      className="dropdown-item"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </header>
 
-      <div className="wallet-section">
-        <WalletConnection onAccountChange={setAccount} />
-      </div>
-
-      {isRegistered && (
-        <div className="navigation-tabs" style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '15px',
-          marginBottom: '20px',
-          flexWrap: 'wrap'
-        }}>
-          <button
-            onClick={() => {
-              setCurrentView('profile');
-              setSelectedCourse(null);
-            }}
-            style={{
-              background: currentView === 'profile' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
-              color: currentView === 'profile' ? 'white' : '#2c3e50',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: '600',
-              transition: 'all 0.3s'
-            }}
-          >
-            👤 Profile
-          </button>
-          <button
-            onClick={() => {
-              setCurrentView('courses');
-              setSelectedCourse(null);
-            }}
-            style={{
-              background: currentView === 'courses' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
-              color: currentView === 'courses' ? 'white' : '#2c3e50',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: '600',
-              transition: 'all 0.3s'
-            }}
-          >
-            📚 Courses
-          </button>
-          <button
-            onClick={() => {
-              setCurrentView('referrals');
-              setSelectedCourse(null);
-            }}
-            style={{
-              background: currentView === 'referrals' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
-              color: currentView === 'referrals' ? 'white' : '#2c3e50',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: '600',
-              transition: 'all 0.3s'
-            }}
-          >
-            👥 Referrals
-          </button>
-          <button
-            onClick={() => {
-              setCurrentView('my-referrals');
-              setSelectedCourse(null);
-            }}
-            style={{
-              background: currentView === 'my-referrals' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e0e0e0',
-              color: currentView === 'my-referrals' ? 'white' : '#2c3e50',
-              border: 'none',
-              padding: '12px 24px',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: '600',
-              transition: 'all 0.3s'
-            }}
-          >
-            🤝 My Referrals
-          </button>
-        </div>
-      )}
+      <div className="dashboard-content">
 
       {account && (
         <>
@@ -210,18 +290,66 @@ function AppContent() {
           )}
 
           {isRegistered && currentView === 'courses' && !selectedCourse && (
-            <LearningPaths
-              onSelectCourse={handleSelectCourse}
-              completedCourses={completedCourses}
-            />
+            <>
+              <div className="welcome-section">
+                <h1 className="welcome-title">What do you want to learn today?</h1>
+
+                <div className="ai-course-generator">
+                  <input
+                    type="text"
+                    className="ai-input"
+                    placeholder="Generate a course on 'Web Development for Beginners'..."
+                  />
+                  <button className="ai-generate-btn">
+                    <span className="sparkle-icon">➤</span>
+                  </button>
+                </div>
+              </div>
+              <LearningPaths
+                onSelectCourse={handleSelectCourse}
+                completedCourses={completedCourses}
+              />
+            </>
           )}
 
           {isRegistered && currentView === 'referrals' && !selectedCourse && (
-            <Referrals account={account} connex={connex} />
+            <div className="referrals-container">
+              <div className="referrals-tabs">
+                <button
+                  onClick={() => setCurrentView('referrals')}
+                  className="referral-tab active"
+                >
+                  Invite Friends
+                </button>
+                <button
+                  onClick={() => setCurrentView('my-referrals')}
+                  className="referral-tab"
+                >
+                  My Referrals
+                </button>
+              </div>
+              <Referrals account={account} connex={connex} />
+            </div>
           )}
 
           {isRegistered && currentView === 'my-referrals' && !selectedCourse && (
-            <MyReferrals account={account} connex={connex} />
+            <div className="referrals-container">
+              <div className="referrals-tabs">
+                <button
+                  onClick={() => setCurrentView('referrals')}
+                  className="referral-tab"
+                >
+                  Invite Friends
+                </button>
+                <button
+                  onClick={() => setCurrentView('my-referrals')}
+                  className="referral-tab active"
+                >
+                  My Referrals
+                </button>
+              </div>
+              <MyReferrals account={account} connex={connex} />
+            </div>
           )}
 
           {isRegistered && selectedCourse && (
@@ -237,12 +365,14 @@ function AppContent() {
       )}
 
       {!account && (
-        <div className="card">
-          <p style={{ textAlign: 'center', color: '#666' }}>
-            Please connect your VeWorld wallet to get started
+        <div className="welcome-section">
+          <h1 className="welcome-title">Welcome!</h1>
+          <p className="welcome-subtitle" style={{ color: '#CFCFCF' }}>
+            Please connect your wallet to get started
           </p>
         </div>
       )}
+      </div>
     </div>
   );
 }

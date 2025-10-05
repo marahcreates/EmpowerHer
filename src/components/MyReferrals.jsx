@@ -133,7 +133,7 @@ const MyReferrals = ({ account, connex }) => {
   if (loading) {
     return (
       <div className="my-referrals-container">
-        <h2>🤝 My Referrals</h2>
+        <h2>My Referrals</h2>
         <p>Loading referrals...</p>
       </div>
     );
@@ -141,7 +141,7 @@ const MyReferrals = ({ account, connex }) => {
 
   return (
     <div className="my-referrals-container">
-      <h2>🤝 My Referrals</h2>
+      <h2>My Referrals</h2>
 
       <div className="tabs">
         <button
@@ -185,13 +185,13 @@ const MyReferrals = ({ account, connex }) => {
                   <div className="referral-status">
                     {!referral.confirmed ? (
                       <>
-                        <span className="status-badge pending">⏳ Pending Confirmation</span>
+                        <span className="status-badge pending">Pending Confirmation</span>
                         <button
                           className="confirm-btn"
                           onClick={() => handleConfirmReferral(referral.referrer)}
                           disabled={confirming}
                         >
-                          {confirming ? 'Confirming...' : '✓ Confirm This Referral'}
+                          {confirming ? 'Confirming...' : 'Confirm This Referral'}
                         </button>
                         <p className="help-text">
                           Did {referral.referrerName} actually refer you for a job? Confirm to help them earn rewards!
@@ -199,9 +199,9 @@ const MyReferrals = ({ account, connex }) => {
                       </>
                     ) : (
                       <div className="confirmed-status">
-                        <span className="status-badge confirmed">✅ Confirmed</span>
+                        <span className="status-badge confirmed">Confirmed</span>
                         {referral.rewardClaimed && (
-                          <span className="status-badge claimed">🎁 Reward Claimed</span>
+                          <span className="status-badge claimed">Reward Claimed</span>
                         )}
                       </div>
                     )}
@@ -240,26 +240,26 @@ const MyReferrals = ({ account, connex }) => {
                   <div className="referral-status">
                     {!referral.confirmed ? (
                       <>
-                        <span className="status-badge pending">⏳ Waiting for Confirmation</span>
+                        <span className="status-badge pending">Waiting for Confirmation</span>
                         <p className="help-text">
                           Waiting for {referral.refereeName} to confirm your referral
                         </p>
                       </>
                     ) : !referral.rewardClaimed ? (
                       <>
-                        <span className="status-badge confirmed">✅ Confirmed</span>
+                        <span className="status-badge confirmed">Confirmed</span>
                         <button
                           className="claim-btn"
                           onClick={() => handleClaimReward(referral.referee)}
                           disabled={claiming}
                         >
-                          {claiming ? 'Claiming...' : '🎁 Claim 5 B3TR Reward'}
+                          {claiming ? 'Claiming...' : 'Claim 5 B3TR Reward'}
                         </button>
                       </>
                     ) : (
                       <div className="confirmed-status">
-                        <span className="status-badge confirmed">✅ Confirmed</span>
-                        <span className="status-badge claimed">🎁 Reward Claimed</span>
+                        <span className="status-badge confirmed">Confirmed</span>
+                        <span className="status-badge claimed">Reward Claimed</span>
                       </div>
                     )}
                   </div>

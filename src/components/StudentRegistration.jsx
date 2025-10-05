@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../config/contract';
 
@@ -7,29 +7,45 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState(null);
   const [txId, setTxId] = useState(null);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: ''
-  });
+  const [cameraStream, setCameraStream] = useState(null);
+  const videoRef = useRef(null);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  useEffect(() => {
+    // Start camera when component mounts
+    startCamera();
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    
-    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+    // Cleanup camera when component unmounts
+    return () => {
+      stopCamera();
+    };
+  }, []);
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 }
+      });
+      setCameraStream(stream);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error('Error accessing camera:', error);
       setRegistrationStatus({
         type: 'error',
-        message: 'Please fill in both first name and last name'
+        message: 'Unable to access camera. Please grant camera permissions.'
       });
-      return;
     }
+  };
 
+  const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
+  };
+
+  const handleRegister = async () => {
     if (!connex) {
       setRegistrationStatus({ type: 'error', message: 'Wallet not connected' });
       return;
@@ -46,8 +62,6 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
         inputs: [{ name: '', type: 'address' }],
         outputs: [
           { name: 'wallet', type: 'address' },
-          { name: 'name', type: 'string' },
-          { name: 'familyName', type: 'string' },
           { name: 'registered', type: 'bool' },
           { name: 'graduated', type: 'bool' },
           { name: 'certificate', type: 'bytes32' }
@@ -66,19 +80,18 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
 
       // Find the addStudent function ABI
       const addStudentABI = CONTRACT_ABI.find(fn => fn.name === 'addStudent');
-      
+
       if (!addStudentABI) {
         throw new Error('addStudent function not found in ABI');
       }
 
       console.log('Registration ABI:', addStudentABI);
-      console.log('Form data:', formData);
 
       // Create the method using Connex
       const method = connex.thor.account(CONTRACT_ADDRESS).method(addStudentABI);
-      
-      // Encode the function call with parameters and 1 VET value
-      const clause = method.asClause(formData.firstName.trim(), formData.lastName.trim());
+
+      // Encode the function call with 1 VET value
+      const clause = method.asClause();
       clause.value = '1000000000000000000'; // 1 VET in wei
 
       console.log('Registration clause:', clause);
@@ -87,7 +100,7 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
 
       const tx = connex.vendor.sign('tx', [clause])
         .signer(account)
-        .comment('Register as Learn2Earn Student')
+        .comment('Register as Learn2Earn Student - Female Verification')
         .gas(200000); // Set explicit gas limit
 
       const result = await tx.request();
@@ -100,6 +113,23 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
         });
 
         await waitForTransaction(result.txid);
+
+        // Create initial profile to mark account as active
+        try {
+          const updateProfileMethod = connex.thor.account(CONTRACT_ADDRESS).method(
+            CONTRACT_ABI.find(abi => abi.name === 'updateProfile')
+          );
+
+          const profileClause = updateProfileMethod.asClause('', '', '', '', false);
+
+          await connex.vendor.sign('tx', [profileClause])
+            .signer(account)
+            .request();
+
+          console.log('Initial profile created');
+        } catch (err) {
+          console.error('Failed to create initial profile:', err);
+        }
 
         // Notify backend about registration
         try {
@@ -141,6 +171,10 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
             type: 'success',
             message: 'Successfully registered as a student! You can now submit proofs.'
           });
+
+          // Stop camera after successful registration
+          stopCamera();
+
           // Call the parent component to refresh the student status
           if (onRegistrationSuccess) {
             setTimeout(onRegistrationSuccess, 2000);
@@ -159,76 +193,94 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
 
   return (
     <div className="card">
-      <h2>Student Registration</h2>
-      <p>Register as a student to participate in the Learn2Earn program. Registration fee: 1 VET</p>
-      
-      <form onSubmit={handleRegister}>
-        <div className="form-group">
-          <label htmlFor="firstName">First Name</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            placeholder="Enter your first name"
-            disabled={isRegistering}
-            required
+      <h2 style={{ color: 'white' }}>Female Verification</h2>
+      <p style={{ marginBottom: '1rem', color: 'white' }}>
+        To ensure TechBloom serves women in tech, we need to verify your identity.
+      </p>
+
+      <div style={{
+        background: 'rgba(255, 193, 7, 0.1)',
+        border: '1px solid rgba(255, 193, 7, 0.3)',
+        borderRadius: '8px',
+        padding: '12px',
+        marginBottom: '1.5rem',
+        color: '#ffc107'
+      }}>
+        <strong>Note:</strong> Verification is turned off during the hackathon judging period.
+        Click "Verify Now" to proceed with registration.
+      </div>
+
+      <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{
+          background: '#000',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          position: 'relative',
+          aspectRatio: '4/3',
+          maxWidth: '500px',
+          margin: '0 auto'
+        }}>
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
           />
         </div>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '0.9rem',
+          color: '#CFCFCF',
+          marginTop: '0.5rem'
+        }}>
+          Camera preview
+        </p>
+      </div>
 
-        <div className="form-group">
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            placeholder="Enter your last name"
-            disabled={isRegistering}
-            required
-          />
-        </div>
-
-        <button 
-          type="submit" 
-          className="btn" 
-          disabled={isRegistering || !account}
-        >
-          {isRegistering ? (
-            <>
-              <span className="loading"></span> Registering...
-            </>
-          ) : (
-            'Register (1 VET)'
-          )}
-        </button>
-
-        {registrationStatus && (
-          <div className={`status-message ${registrationStatus.type}`}>
-            {registrationStatus.message}
-            {txId && registrationStatus.type === 'success' && (
-              <div style={{ marginTop: '0.5rem' }}>
-                <button
-                  type="button"
-                  onClick={openExplorer}
-                  style={{
-                    background: 'transparent',
-                    border: '1px solid currentColor',
-                    padding: '0.25rem 0.5rem',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    fontSize: '0.9rem'
-                  }}
-                >
-                  View on Explorer
-                </button>
-              </div>
-            )}
-          </div>
+      <button
+        type="button"
+        onClick={handleRegister}
+        className="btn"
+        disabled={isRegistering || !account}
+        style={{ width: '100%' }}
+      >
+        {isRegistering ? (
+          <>
+            <span className="loading"></span> Verifying...
+          </>
+        ) : (
+          'Verify Now (1 VET)'
         )}
-      </form>
+      </button>
+
+      {registrationStatus && (
+        <div className={`status-message ${registrationStatus.type}`}>
+          {registrationStatus.message}
+          {txId && registrationStatus.type === 'success' && (
+            <div style={{ marginTop: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={openExplorer}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid currentColor',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                View on Explorer
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

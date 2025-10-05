@@ -29,8 +29,6 @@ contract Learn2Earn {
     // Structure to store student information
     struct Student {
         address wallet;         // Student's wallet address
-        string name;            // First name
-        string familyName;      // Last name
         bool registered;        // True if student is registered
         bool graduated;         // True if student has graduated
         bytes32 certificate;    // Certificate hash (created when student graduates)
@@ -44,6 +42,7 @@ contract Learn2Earn {
         string skills;          // Skills list
         bool lookingForReferral; // True if user is looking for job referral
         bool profileCreated;    // True if profile has been created
+        bool accountDeleted;    // True if user deleted their account
     }
 
     // Mapping from wallet address to student data
@@ -107,7 +106,7 @@ contract Learn2Earn {
     }
 
     // Function for students to register by paying 1 VET
-    function addStudent(string memory _name, string memory _familyName) public payable {
+    function addStudent() public payable {
         require(msg.value == 1 ether, "You must pay 1 VET to register.");
 
         // Make sure the student isn't already registered
@@ -116,8 +115,6 @@ contract Learn2Earn {
         // Create a new student record
         students[msg.sender] = Student({
             wallet: msg.sender,
-            name: _name,
-            familyName: _familyName,
             registered: true,
             graduated: false,
             certificate: 0
@@ -243,10 +240,29 @@ contract Learn2Earn {
             experience: _experience,
             skills: _skills,
             lookingForReferral: _lookingForReferral,
-            profileCreated: true
+            profileCreated: true,
+            accountDeleted: false
         });
 
         emit ProfileUpdated(msg.sender, _lookingForReferral);
+    }
+
+    // Function to delete account (clears profile and marks as deleted)
+    function deleteAccount() public {
+        require(students[msg.sender].registered, "You must be a registered student.");
+        require(profiles[msg.sender].profileCreated, "No profile to delete.");
+
+        profiles[msg.sender] = UserProfile({
+            profilePicture: '',
+            bio: '',
+            experience: '',
+            skills: '',
+            lookingForReferral: false,
+            profileCreated: false,
+            accountDeleted: true
+        });
+
+        emit ProfileUpdated(msg.sender, false);
     }
 
     // Get user's completed courses
@@ -286,7 +302,8 @@ contract Learn2Earn {
         string memory experience,
         string memory skills,
         bool lookingForReferral,
-        bool profileCreated
+        bool profileCreated,
+        bool accountDeleted
     ) {
         UserProfile memory profile = profiles[userAddress];
         return (
@@ -295,7 +312,8 @@ contract Learn2Earn {
             profile.experience,
             profile.skills,
             profile.lookingForReferral,
-            profile.profileCreated
+            profile.profileCreated,
+            profile.accountDeleted
         );
     }
 

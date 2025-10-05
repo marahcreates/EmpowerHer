@@ -1,13 +1,10 @@
-export const CONTRACT_ADDRESS = '0xb848c1cefc304080d7af73ebac59f8c9e68381bf';
+export const CONTRACT_ADDRESS = '0x1005b10c23c3269eeb5735347347e7b0625da156';
 
 export const CONTRACT_ABI = [
   {
     name: 'addStudent',
     type: 'function',
-    inputs: [
-      { name: '_name', type: 'string' },
-      { name: '_familyName', type: 'string' }
-    ],
+    inputs: [],
     outputs: [],
     stateMutability: 'payable'
   },
@@ -19,8 +16,6 @@ export const CONTRACT_ABI = [
     ],
     outputs: [
       { name: 'wallet', type: 'address' },
-      { name: 'name', type: 'string' },
-      { name: 'familyName', type: 'string' },
       { name: 'registered', type: 'bool' },
       { name: 'graduated', type: 'bool' },
       { name: 'certificate', type: 'bytes32' }
@@ -62,6 +57,13 @@ export const CONTRACT_ABI = [
     stateMutability: 'nonpayable'
   },
   {
+    name: 'deleteAccount',
+    type: 'function',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable'
+  },
+  {
     name: 'getProfile',
     type: 'function',
     inputs: [
@@ -73,7 +75,8 @@ export const CONTRACT_ABI = [
       { name: 'experience', type: 'string' },
       { name: 'skills', type: 'string' },
       { name: 'lookingForReferral', type: 'bool' },
-      { name: 'profileCreated', type: 'bool' }
+      { name: 'profileCreated', type: 'bool' },
+      { name: 'accountDeleted', type: 'bool' }
     ],
     stateMutability: 'view'
   },

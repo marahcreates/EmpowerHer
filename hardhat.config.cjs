@@ -26,9 +26,9 @@ module.exports = {
     vechain_testnet: {
       url: "https://testnet.vechain.org",
       ...(accounts && { accounts }),
-      gas: "auto",
+      gas: 10000000,
       gasPrice: "auto",
-      timeout: 20000
+      timeout: 60000
     },
     vechain_testnet_delegated: {
       url: "https://testnet.vechain.org",

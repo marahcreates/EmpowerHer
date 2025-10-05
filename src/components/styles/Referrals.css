@@ -5,27 +5,28 @@
 }
 
 .referrals-container h2 {
-  color: #2c3e50;
+  color: white;
   font-size: 2rem;
   margin-bottom: 10px;
 }
 
 .subtitle {
-  color: #666;
+  color: #CFCFCF;
   margin-bottom: 30px;
   font-size: 1.1rem;
 }
 
 .no-users {
-  background: white;
+  background: #161315;
   border-radius: 12px;
   padding: 40px;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(208, 146, 195, 0.2);
 }
 
 .no-users p {
-  color: #666;
+  color: #CFCFCF;
   font-size: 1.1rem;
   margin: 10px 0;
 }
@@ -37,21 +38,22 @@
 }
 
 .user-card {
-  background: white;
-  border-radius: 12px;
+  background: #161315;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(208, 146, 195, 0.2);
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .user-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
 }
 
 .user-card-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f5e6d3;
   padding: 20px;
   display: flex;
   justify-content: center;
@@ -71,14 +73,14 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  border: 4px solid white;
-  background: white;
+  border: 4px solid #D092C3;
+  background: #D092C3;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
   font-weight: bold;
-  color: #667eea;
+  color: white;
 }
 
 .user-card-body {
@@ -87,19 +89,19 @@
 
 .user-card-body h3 {
   margin: 0 0 5px 0;
-  color: #2c3e50;
+  color: white;
   font-size: 1.3rem;
 }
 
 .user-address {
-  color: #999;
+  color: #888;
   font-size: 0.85rem;
   font-family: monospace;
   margin: 0 0 15px 0;
 }
 
 .user-bio-preview {
-  color: #666;
+  color: #CFCFCF;
   font-size: 0.95rem;
   line-height: 1.5;
   margin: 15px 0;
@@ -113,23 +115,23 @@
 }
 
 .skill-tag-small {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: rgba(208, 146, 195, 0.2);
+  color: #D092C3;
   padding: 4px 10px;
   border-radius: 12px;
   font-size: 0.8rem;
 }
 
 .more-skills {
-  color: #667eea;
+  color: #D092C3;
   font-size: 0.8rem;
   font-weight: 600;
 }
 
 .view-details-btn {
   width: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #D092C3;
+  color: #161315;
   border: none;
   padding: 10px;
   border-radius: 8px;
@@ -137,11 +139,11 @@
   font-size: 1rem;
   font-weight: 600;
   margin-top: 15px;
-  transition: opacity 0.3s;
+  transition: background 0.3s;
 }
 
 .view-details-btn:hover {
-  opacity: 0.9;
+  background: #b877a8;
 }
 
 .user-details-modal {
@@ -160,33 +162,35 @@
 }
 
 .modal-content {
-  background: white;
-  border-radius: 12px;
+  background: #161315;
+  border-radius: 20px;
   max-width: 800px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
   padding: 30px;
+  border: 1px solid rgba(208, 146, 195, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 .close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
-  background: #e0e0e0;
+  background: rgba(208, 146, 195, 0.2);
   border: none;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 1.5rem;
-  color: #666;
+  color: #CFCFCF;
   transition: background 0.3s;
 }
 
 .close-btn:hover {
-  background: #d0d0d0;
+  background: rgba(208, 146, 195, 0.3);
 }
 
 .user-full-profile {
@@ -199,14 +203,14 @@
   gap: 25px;
   margin-bottom: 30px;
   padding-bottom: 30px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid rgba(208, 146, 195, 0.2);
 }
 
 .user-avatar-large {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: 4px solid #667eea;
+  border: 4px solid #D092C3;
   object-fit: cover;
 }
 
@@ -214,8 +218,8 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: 4px solid #667eea;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 4px solid #D092C3;
+  background: #D092C3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -226,12 +230,12 @@
 
 .profile-info h2 {
   margin: 0 0 10px 0;
-  color: #2c3e50;
+  color: white;
   font-size: 2rem;
 }
 
 .address-full {
-  color: #999;
+  color: #888;
   font-size: 0.9rem;
   font-family: monospace;
   word-break: break-all;
@@ -242,13 +246,13 @@
 }
 
 .detail-section h3 {
-  color: #667eea;
+  color: #D092C3;
   font-size: 1.3rem;
   margin: 0 0 15px 0;
 }
 
 .detail-section p {
-  color: #555;
+  color: #CFCFCF;
   line-height: 1.6;
   font-size: 1rem;
 }
@@ -260,8 +264,8 @@
 }
 
 .skill-tag {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: rgba(208, 146, 195, 0.2);
+  color: #D092C3;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.95rem;
@@ -270,24 +274,24 @@
 .action-section {
   margin-top: 40px;
   padding-top: 30px;
-  border-top: 2px solid #e0e0e0;
+  border-top: 2px solid rgba(208, 146, 195, 0.2);
 }
 
 .refer-btn {
   width: 100%;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: #D092C3;
+  color: #161315;
   border: none;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 30px;
   cursor: pointer;
   font-size: 1.2rem;
   font-weight: 600;
-  transition: transform 0.2s;
+  transition: background 0.3s;
 }
 
 .refer-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
+  background: #b877a8;
 }
 
 .refer-btn:disabled {
@@ -297,7 +301,7 @@
 
 .refer-note {
   text-align: center;
-  color: #666;
+  color: #CFCFCF;
   font-size: 0.9rem;
   margin-top: 15px;
   line-height: 1.5;

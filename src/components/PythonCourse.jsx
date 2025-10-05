@@ -34,42 +34,57 @@ const PythonCourse = ({ connex, walletAddress, onComplete }) => {
 
   return (
     <div style={{
-      maxWidth: '800px',
-      margin: '0 auto',
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif'
+      display: 'flex',
+      height: 'calc(100vh - 120px)',
+      gap: '2rem',
+      padding: '2rem',
+      maxWidth: '1400px',
+      margin: '0 auto'
     }}>
-      <h1 style={{ color: '#333', borderBottom: '2px solid #4CAF50', paddingBottom: '10px' }}>
-        Python Basics: Your First Lesson
-      </h1>
-
+      {/* Left Side - Content */}
       <div style={{
-        backgroundColor: '#f5f5f5',
-        padding: '20px',
-        borderRadius: '8px',
-        marginBottom: '30px',
-        lineHeight: '1.6'
+        flex: '1',
+        overflowY: 'auto',
+        padding: '2rem',
+        backgroundColor: '#161315',
+        borderRadius: '16px',
+        border: '1px solid rgba(208, 146, 195, 0.2)'
       }}>
-        <h2 style={{ color: '#4CAF50' }}>Introduction to Python Variables</h2>
+        <h1 style={{
+          color: 'white',
+          fontSize: '2rem',
+          marginBottom: '1.5rem',
+          fontWeight: '600'
+        }}>
+          Python Basics: Your First Lesson
+        </h1>
 
-        <p>
-          <strong>What is a Variable?</strong><br/>
+        <h2 style={{ color: '#D092C3', fontSize: '1.3rem', marginBottom: '1rem' }}>
+          Introduction to Python Variables
+        </h2>
+
+        <p style={{ color: '#CFCFCF', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+          <strong style={{ color: 'white' }}>What is a Variable?</strong><br/>
           In Python, a variable is like a container that stores data. You can think of it as a labeled box
           where you can put different types of information.
         </p>
 
-        <h3 style={{ color: '#555', marginTop: '20px' }}>Creating Variables</h3>
-        <p>
+        <h3 style={{ color: 'white', fontSize: '1.1rem', marginTop: '1.5rem', marginBottom: '0.8rem' }}>
+          Creating Variables
+        </h3>
+        <p style={{ color: '#CFCFCF', lineHeight: '1.7', marginBottom: '1rem' }}>
           To create a variable in Python, you simply give it a name and assign it a value using the equals sign (=).
         </p>
 
         <div style={{
-          backgroundColor: '#1e1e1e',
+          backgroundColor: '#0d0d0d',
           color: '#d4d4d4',
-          padding: '15px',
-          borderRadius: '5px',
+          padding: '1.2rem',
+          borderRadius: '8px',
           fontFamily: 'monospace',
-          marginBottom: '15px'
+          marginBottom: '1.5rem',
+          fontSize: '0.9rem',
+          border: '1px solid rgba(208, 146, 195, 0.1)'
         }}>
           <code>
             # Creating variables<br/>
@@ -80,58 +95,39 @@ const PythonCourse = ({ connex, walletAddress, onComplete }) => {
           </code>
         </div>
 
-        <h3 style={{ color: '#555', marginTop: '20px' }}>Variable Types</h3>
-        <ul style={{ lineHeight: '1.8' }}>
-          <li><strong>String:</strong> Text data, enclosed in quotes (e.g., "Hello")</li>
-          <li><strong>Integer:</strong> Whole numbers (e.g., 42)</li>
-          <li><strong>Float:</strong> Decimal numbers (e.g., 3.14)</li>
-          <li><strong>Boolean:</strong> True or False values</li>
-        </ul>
-
-        <h3 style={{ color: '#555', marginTop: '20px' }}>Using Variables</h3>
-        <p>Once you've created a variable, you can use it in your code:</p>
-
-        <div style={{
-          backgroundColor: '#1e1e1e',
-          color: '#d4d4d4',
-          padding: '15px',
-          borderRadius: '5px',
-          fontFamily: 'monospace',
-          marginBottom: '15px'
-        }}>
-          <code>
-            greeting = "Hello"<br/>
-            name = "Bob"<br/>
-            print(greeting + ", " + name + "!")<br/>
-            <span style={{ color: '#6A9955' }}># Output: Hello, Bob!</span>
-          </code>
-        </div>
-
-        <h3 style={{ color: '#555', marginTop: '20px' }}>Key Points to Remember</h3>
-        <ul style={{ lineHeight: '1.8' }}>
-          <li>Variable names should be descriptive (e.g., <code>user_age</code> instead of <code>x</code>)</li>
-          <li>Variables can be changed - you can assign a new value to an existing variable</li>
-          <li>Python is case-sensitive: <code>Name</code> and <code>name</code> are different variables</li>
+        <h3 style={{ color: 'white', fontSize: '1.1rem', marginTop: '1.5rem', marginBottom: '0.8rem' }}>
+          Variable Types
+        </h3>
+        <ul style={{ lineHeight: '1.8', color: '#CFCFCF', paddingLeft: '1.5rem' }}>
+          <li><strong style={{ color: 'white' }}>String:</strong> Text data, enclosed in quotes (e.g., "Hello")</li>
+          <li><strong style={{ color: 'white' }}>Integer:</strong> Whole numbers (e.g., 42)</li>
+          <li><strong style={{ color: 'white' }}>Float:</strong> Decimal numbers (e.g., 3.14)</li>
+          <li><strong style={{ color: 'white' }}>Boolean:</strong> True or False values</li>
         </ul>
       </div>
 
+      {/* Right Side - Quiz */}
       <div style={{
-        backgroundColor: '#fff3cd',
-        padding: '20px',
-        borderRadius: '8px',
-        border: '1px solid #ffc107',
-        marginBottom: '20px'
+        width: '500px',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: '#161315',
+        borderRadius: '16px',
+        padding: '2rem',
+        border: '1px solid rgba(208, 146, 195, 0.2)'
       }}>
-        <h2 style={{ color: '#856404', marginTop: '0' }}>Quiz Time!</h2>
-        <p style={{ fontSize: '16px', marginBottom: '20px' }}>
+        <h2 style={{ color: '#D092C3', fontSize: '1.5rem', marginTop: '0', marginBottom: '1rem' }}>
+          Quiz Time!
+        </h2>
+        <p style={{ fontSize: '1rem', marginBottom: '1.5rem', color: '#CFCFCF' }}>
           Test your understanding of Python variables:
         </p>
 
-        <p style={{ fontWeight: 'bold', marginBottom: '15px' }}>
+        <p style={{ fontWeight: '600', marginBottom: '1.5rem', color: 'white', fontSize: '1.05rem' }}>
           Which of the following correctly creates a variable storing the number 100 in Python?
         </p>
 
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '2rem', flex: 1 }}>
           {[
             'var age = 100',
             'int age = 100',
@@ -141,11 +137,11 @@ const PythonCourse = ({ connex, walletAddress, onComplete }) => {
             <div
               key={index}
               style={{
-                margin: '10px 0',
-                padding: '12px',
-                backgroundColor: selectedAnswer === index ? '#e3f2fd' : 'white',
-                border: `2px solid ${selectedAnswer === index ? '#2196F3' : '#ddd'}`,
-                borderRadius: '5px',
+                margin: '12px 0',
+                padding: '1rem 1.2rem',
+                backgroundColor: selectedAnswer === index ? 'rgba(208, 146, 195, 0.1)' : 'transparent',
+                border: `2px solid ${selectedAnswer === index ? '#D092C3' : 'rgba(208, 146, 195, 0.3)'}`,
+                borderRadius: '8px',
                 cursor: 'pointer',
                 transition: 'all 0.3s'
               }}
@@ -158,9 +154,14 @@ const PythonCourse = ({ connex, walletAddress, onComplete }) => {
                   checked={selectedAnswer === index}
                   onChange={() => !showFeedback && setSelectedAnswer(index)}
                   disabled={showFeedback}
-                  style={{ marginRight: '10px' }}
+                  style={{
+                    marginRight: '12px',
+                    accentColor: '#D092C3',
+                    width: '18px',
+                    height: '18px'
+                  }}
                 />
-                <code style={{ fontSize: '14px' }}>{option}</code>
+                <code style={{ fontSize: '0.95rem', color: '#CFCFCF' }}>{option}</code>
               </label>
             </div>
           ))}
@@ -171,14 +172,16 @@ const PythonCourse = ({ connex, walletAddress, onComplete }) => {
             onClick={handleSubmitAnswer}
             disabled={selectedAnswer === null}
             style={{
-              backgroundColor: selectedAnswer === null ? '#ccc' : '#4CAF50',
-              color: 'white',
-              padding: '12px 30px',
+              backgroundColor: selectedAnswer === null ? '#666' : '#D092C3',
+              color: selectedAnswer === null ? '#999' : '#161315',
+              padding: '1rem 2rem',
               border: 'none',
-              borderRadius: '5px',
-              fontSize: '16px',
+              borderRadius: '8px',
+              fontSize: '1rem',
               cursor: selectedAnswer === null ? 'not-allowed' : 'pointer',
-              fontWeight: 'bold'
+              fontWeight: '600',
+              width: '100%',
+              transition: 'background 0.3s'
             }}
           >
             Submit Answer
@@ -187,16 +190,15 @@ const PythonCourse = ({ connex, walletAddress, onComplete }) => {
 
         {showFeedback && (
           <div style={{
-            marginTop: '20px',
-            padding: '15px',
-            borderRadius: '5px',
-            backgroundColor: isCorrect ? '#d4edda' : '#f8d7da',
-            border: `1px solid ${isCorrect ? '#c3e6cb' : '#f5c6cb'}`,
-            color: isCorrect ? '#155724' : '#721c24'
+            padding: '1.2rem',
+            borderRadius: '8px',
+            backgroundColor: isCorrect ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)',
+            border: `1px solid ${isCorrect ? '#4CAF50' : '#f44336'}`,
+            color: isCorrect ? '#4CAF50' : '#f44336'
           }}>
             {isCorrect ? (
               <>
-                <h3 style={{ marginTop: '0', color: '#155724' }}>🎉 Correct!</h3>
+                <h3 style={{ marginTop: '0', color: '#4CAF50', fontSize: '1.2rem' }}>🎉 Correct!</h3>
                 <p>
                   Great job! In Python, you create a variable by simply writing the variable name,
                   followed by an equals sign, and then the value. No type declaration is needed!

@@ -4,7 +4,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
   const learningTracks = [
     {
       trackName: 'Coding',
-      trackIcon: '💻',
+      trackIcon: '',
       trackColor: '#3776ab',
       courses: [
         {
@@ -55,69 +55,8 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
       ]
     },
     {
-      trackName: 'Web Development',
-      trackIcon: '🌐',
-      trackColor: '#e74c3c',
-      courses: [
-        {
-          id: 'html-basics',
-          title: 'HTML Basics',
-          description: 'Structure web pages',
-          icon: '📄',
-          difficulty: 'Beginner',
-          duration: '5 min',
-          reward: '10 B3TR'
-        },
-        {
-          id: 'css-styling',
-          title: 'CSS Styling',
-          description: 'Style beautiful websites',
-          icon: '🎨',
-          difficulty: 'Beginner',
-          duration: '5 min',
-          reward: '10 B3TR'
-        },
-        {
-          id: 'react-intro',
-          title: 'React Intro',
-          description: 'Build UI components',
-          icon: '⚛️',
-          difficulty: 'Intermediate',
-          duration: '7 min',
-          reward: '10 B3TR'
-        },
-        {
-          id: 'nodejs-backend',
-          title: 'Node.js Backend',
-          description: 'Server-side JavaScript',
-          icon: '🟢',
-          difficulty: 'Intermediate',
-          duration: '7 min',
-          reward: '10 B3TR'
-        },
-        {
-          id: 'rest-apis',
-          title: 'REST APIs',
-          description: 'Build web services',
-          icon: '🔌',
-          difficulty: 'Intermediate',
-          duration: '8 min',
-          reward: '10 B3TR'
-        },
-        {
-          id: 'fullstack-app',
-          title: 'Full-Stack App',
-          description: 'Complete web application',
-          icon: '🚀',
-          difficulty: 'Advanced',
-          duration: '10 min',
-          reward: '10 B3TR'
-        }
-      ]
-    },
-    {
       trackName: 'Blockchain',
-      trackIcon: '⛓️',
+      trackIcon: '',
       trackColor: '#9b59b6',
       courses: [
         {
@@ -174,31 +113,8 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
       maxWidth: '1400px',
       margin: '0 auto',
       padding: '20px',
-      fontFamily: 'Arial, sans-serif',
-      background: '#0f0f0f',
-      minHeight: '100vh'
+      fontFamily: 'Arial, sans-serif'
     }}>
-      <div style={{
-        marginBottom: '40px',
-        textAlign: 'center'
-      }}>
-        <h1 style={{
-          color: '#fff',
-          fontSize: '2.5rem',
-          marginBottom: '10px'
-        }}>
-          Choose Your Learning Track
-        </h1>
-        <p style={{
-          color: '#aaa',
-          fontSize: '1.1rem',
-          maxWidth: '700px',
-          margin: '0 auto'
-        }}>
-          Empowering women in tech through education. Complete courses and earn B3TR tokens!
-        </p>
-      </div>
-
       {learningTracks.map((track) => (
         <div key={track.trackName} style={{
           marginBottom: '50px'
@@ -223,13 +139,67 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
 
           {/* Horizontal Scrolling Course Cards */}
           <div style={{
-            display: 'flex',
-            overflowX: 'auto',
-            gap: '20px',
-            padding: '10px 0 20px 0',
-            scrollbarWidth: 'thin',
-            scrollbarColor: `${track.trackColor} #333`
+            position: 'relative'
           }}>
+            {/* Left Fade - Only visible when scrolled */}
+            <div
+              className={`scroll-fade-left-${track.trackName.replace(/\s+/g, '-').toLowerCase()}`}
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                bottom: 20,
+                width: '40px',
+                background: 'linear-gradient(to right, #191A1F 0%, transparent 100%)',
+                zIndex: 2,
+                pointerEvents: 'none',
+                opacity: 0,
+                transition: 'opacity 0.3s'
+              }}
+            ></div>
+
+            {/* Right Fade - Initially visible */}
+            <div
+              className={`scroll-fade-right-${track.trackName.replace(/\s+/g, '-').toLowerCase()}`}
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                bottom: 20,
+                width: '40px',
+                background: 'linear-gradient(to left, #191A1F 0%, transparent 100%)',
+                zIndex: 2,
+                pointerEvents: 'none',
+                opacity: 1,
+                transition: 'opacity 0.3s'
+              }}
+            ></div>
+
+            <div
+              className={`course-scroll-container-${track.trackName.replace(/\s+/g, '-').toLowerCase()}`}
+              style={{
+                display: 'flex',
+                overflowX: 'auto',
+                gap: '20px',
+                padding: '10px 0 20px 0',
+                scrollbarWidth: 'thin',
+                scrollbarColor: `${track.trackColor} #333`
+              }}
+              onScroll={(e) => {
+                const fadeLeftEl = document.querySelector(`.scroll-fade-left-${track.trackName.replace(/\s+/g, '-').toLowerCase()}`);
+                const fadeRightEl = document.querySelector(`.scroll-fade-right-${track.trackName.replace(/\s+/g, '-').toLowerCase()}`);
+                const container = e.target;
+                const maxScroll = container.scrollWidth - container.clientWidth;
+
+                if (fadeLeftEl) {
+                  fadeLeftEl.style.opacity = container.scrollLeft > 10 ? '1' : '0';
+                }
+
+                if (fadeRightEl) {
+                  fadeRightEl.style.opacity = container.scrollLeft < maxScroll - 10 ? '1' : '0';
+                }
+              }}
+            >
             {track.courses.map((course) => {
               const isCompleted = completedCourses[course.id];
 
@@ -238,26 +208,26 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
                   key={course.id}
                   onClick={() => onSelectCourse(course.id)}
                   style={{
-                    minWidth: '280px',
-                    maxWidth: '280px',
-                    background: '#1a1a1a',
-                    borderRadius: '10px',
+                    minWidth: '340px',
+                    maxWidth: '340px',
+                    background: '#161315',
+                    borderRadius: '16px',
                     overflow: 'hidden',
                     cursor: isCompleted ? 'default' : 'pointer',
                     transition: 'transform 0.3s, box-shadow 0.3s',
-                    border: `2px solid ${track.trackColor}`,
-                    opacity: isCompleted ? 0.6 : 1,
+                    border: '1px solid rgba(208, 146, 195, 0.2)',
+                    opacity: isCompleted ? 0.7 : 1,
                     position: 'relative'
                   }}
                   onMouseEnter={(e) => {
                     if (!isCompleted) {
-                      e.currentTarget.style.transform = 'scale(1.05)';
-                      e.currentTarget.style.boxShadow = `0 8px 16px ${track.trackColor}80`;
+                      e.currentTarget.style.transform = 'translateY(-4px)';
+                      e.currentTarget.style.boxShadow = '0 12px 24px rgba(0, 0, 0, 0.5)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isCompleted) {
-                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.transform = 'translateY(0)';
                       e.currentTarget.style.boxShadow = 'none';
                     }
                   }}
@@ -265,52 +235,53 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
                   {isCompleted && (
                     <div style={{
                       position: 'absolute',
-                      top: '10px',
-                      right: '10px',
+                      top: '12px',
+                      right: '12px',
                       background: '#4CAF50',
                       color: 'white',
-                      padding: '5px 10px',
-                      borderRadius: '15px',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
                       fontSize: '0.75rem',
                       fontWeight: 'bold',
                       zIndex: 10
                     }}>
-                      ✓ DONE
+                      ✓ COMPLETED
                     </div>
                   )}
 
-                  {/* Course Icon Header */}
+                  {/* Course Image Placeholder */}
                   <div style={{
-                    background: track.trackColor,
-                    padding: '40px 20px',
-                    textAlign: 'center'
+                    background: '#f5e6d3',
+                    height: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderBottom: '1px solid rgba(208, 146, 195, 0.1)'
                   }}>
                     <div style={{
-                      fontSize: '3.5rem',
-                      marginBottom: '10px'
+                      fontSize: '4rem'
                     }}>
                       {course.icon}
                     </div>
                   </div>
 
                   {/* Course Details */}
-                  <div style={{ padding: '20px' }}>
+                  <div style={{ padding: '24px' }}>
                     <h3 style={{
                       color: '#fff',
-                      margin: '0 0 10px 0',
-                      fontSize: '1.1rem',
-                      fontWeight: 'bold',
-                      minHeight: '50px'
+                      margin: '0 0 12px 0',
+                      fontSize: '1.4rem',
+                      fontWeight: '600',
+                      lineHeight: '1.3'
                     }}>
                       {course.title}
                     </h3>
 
                     <p style={{
-                      color: '#aaa',
-                      fontSize: '0.9rem',
-                      marginBottom: '15px',
-                      lineHeight: '1.4',
-                      minHeight: '40px'
+                      color: '#CFCFCF',
+                      fontSize: '0.95rem',
+                      marginBottom: '20px',
+                      lineHeight: '1.5'
                     }}>
                       {course.description}
                     </p>
@@ -318,63 +289,34 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
                     {/* Course Meta */}
                     <div style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
-                      marginBottom: '15px',
-                      fontSize: '0.8rem',
+                      alignItems: 'center',
+                      gap: '16px',
+                      marginBottom: '0',
+                      fontSize: '0.9rem',
                       color: '#888'
                     }}>
-                      <div>
-                        <span style={{
-                          background: '#333',
-                          padding: '4px 8px',
-                          borderRadius: '4px'
-                        }}>
-                          {course.difficulty}
-                        </span>
-                      </div>
-                      <div>{course.duration}</div>
-                    </div>
-
-                    {/* Reward */}
-                    <div style={{
-                      background: '#2a2a2a',
-                      border: `1px solid ${track.trackColor}`,
-                      borderRadius: '6px',
-                      padding: '8px',
-                      textAlign: 'center',
-                      marginBottom: '12px'
-                    }}>
                       <div style={{
-                        fontSize: '0.85rem',
-                        color: track.trackColor,
-                        fontWeight: 'bold'
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
                       }}>
-                        🎁 {course.reward}
+                        <span>⏱</span>
+                        <span>{course.duration}</span>
+                      </div>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}>
+                        <span>🪙</span>
+                        <span>{course.reward}</span>
                       </div>
                     </div>
-
-                    {/* Action Button */}
-                    <button
-                      style={{
-                        width: '100%',
-                        padding: '10px',
-                        background: isCompleted ? '#555' : track.trackColor,
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '6px',
-                        fontSize: '0.9rem',
-                        fontWeight: 'bold',
-                        cursor: isCompleted ? 'default' : 'pointer',
-                        transition: 'background 0.3s'
-                      }}
-                      disabled={isCompleted}
-                    >
-                      {isCompleted ? 'Completed ✓' : 'Start →'}
-                    </button>
                   </div>
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
       ))}

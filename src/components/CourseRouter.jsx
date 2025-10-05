@@ -13,22 +13,20 @@ import AICourse from './courses/AICourse';
 
 const CourseRouter = ({ courseId, connex, account, onComplete, onBack }) => {
   const ComingSoonPlaceholder = ({ title, color }) => (
-    <div style={{ padding: '60px 20px', textAlign: 'center', background: '#0f0f0f', minHeight: '80vh' }}>
-      <h1 style={{ color: '#fff', fontSize: '3rem', marginBottom: '20px' }}>🚧</h1>
-      <h2 style={{ color: '#fff', fontSize: '2rem', marginBottom: '20px' }}>{title}</h2>
-      <p style={{ color: '#aaa', fontSize: '1.2rem', marginBottom: '40px' }}>
+    <div style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      padding: '2rem'
+    }}>
+      <h1 style={{ color: '#fff', fontSize: '4rem', marginBottom: '1.5rem' }}>🚧</h1>
+      <h2 style={{ color: '#fff', fontSize: '2rem', marginBottom: '1rem' }}>{title}</h2>
+      <p style={{ color: '#CFCFCF', fontSize: '1.1rem', maxWidth: '500px' }}>
         This course is currently being developed. Check back soon!
       </p>
-      <button onClick={onBack} style={{
-        padding: '15px 30px',
-        background: color || '#666',
-        color: 'white',
-        border: 'none',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontSize: '1rem',
-        fontWeight: 'bold'
-      }}>← Back to All Courses</button>
     </div>
   );
 
@@ -76,22 +74,16 @@ const CourseRouter = ({ courseId, connex, account, onComplete, onBack }) => {
   }
 
   return (
-    <div>
-      <button
-        onClick={onBack}
-        style={{
-          margin: '20px',
-          padding: '10px 20px',
-          background: '#666',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
-        }}
-      >
-        ← Back to All Courses
-      </button>
-      <CourseComponent walletAddress={account} onComplete={onComplete} connex={connex} />
+    <div style={{
+      height: 'calc(100vh - 80px)',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
+    }}>
+      {/* Course Content */}
+      <div style={{ flex: 1, overflow: 'hidden' }}>
+        <CourseComponent walletAddress={account} onComplete={onComplete} connex={connex} onBack={onBack} />
+      </div>
     </div>
   );
 };
