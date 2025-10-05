@@ -16,9 +16,11 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@vechain/dapp-kit": "^1.5.1",
+    "@vechain/dapp-kit-react": "^1.5.1",
+    "@vechain/dapp-kit-ui": "^1.5.1",
     "@vechain/sdk-core": "^2.0.4",
     "@vechain/sdk-network": "^2.0.4",
-    "@vechain/vechain-kit": "^1.10.2",
     "axios": "^1.6.5",
     "buffer": "^6.0.3",
     "cors": "^2.8.5",

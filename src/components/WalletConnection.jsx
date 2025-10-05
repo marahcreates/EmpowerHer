@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useDAppKitWallet, useDAppKitWalletModal, useConnex } from '@vechain/vechain-kit';
+import { useWallet, useWalletModal, useConnex } from '@vechain/dapp-kit-react';
 
 function WalletConnection({ onAccountChange }) {
-  const { account, disconnect, connect, setSource } = useDAppKitWallet();
-  const { open: openModal } = useDAppKitWalletModal();
+  const { account, disconnect, connect, setSource } = useWallet();
+  const { open: openModal } = useWalletModal();
   const connex = useConnex();
   const [balance, setBalance] = useState(null);
 

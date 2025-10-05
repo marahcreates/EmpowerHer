@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { VeChainKitProvider, TransactionModalProvider } from '@vechain/vechain-kit';
+import { DAppKitProvider } from '@vechain/dapp-kit-react';
 import WalletConnection from './components/WalletConnection';
 import StudentRegistration from './components/StudentRegistration';
 import ProofSubmissionForm from './components/ProofSubmissionForm';
@@ -149,17 +149,15 @@ function AppContent() {
 
 function App() {
   return (
-    <VeChainKitProvider
+    <DAppKitProvider
       nodeUrl="https://testnet.vechain.org/"
       genesis="test"
       usePersistence={true}
       requireCertificate={false}
       logLevel="DEBUG"
     >
-      <TransactionModalProvider>
-        <AppContent />
-      </TransactionModalProvider>
-    </VeChainKitProvider>
+      <AppContent />
+    </DAppKitProvider>
   );
 }
 
