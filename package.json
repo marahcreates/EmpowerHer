@@ -34,6 +34,7 @@
     "react-dom": "^18.2.0",
     "sqlite3": "^5.1.7",
     "tailwindcss": "^4.1.14",
+    "@tailwindcss/postcss": "^4.1.14",
     "autoprefixer": "^10.4.21"
   },
   "devDependencies": {
@@ -41,7 +42,6 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.1.0",
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.1.1",
-    "@tailwindcss/postcss": "^4.1.14",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
     "@types/chai": "^4.3.20",
