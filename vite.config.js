@@ -6,12 +6,8 @@ export default defineConfig({
   plugins: [
     react(),
     nodePolyfills({
-      include: ['buffer', 'process', 'crypto', 'stream', 'http', 'https', 'url', 'util', 'os'],
-      globals: {
-        Buffer: true,
-        global: true,
-        process: true,
-      },
+      // Enable all polyfills
+      protocolImports: true,
     }),
   ],
   server: {
@@ -20,5 +16,16 @@ export default defineConfig({
   define: {
     global: 'globalThis',
     'process.env': {},
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        // Ensure proper module format
+        format: 'es',
+      },
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
   },
 });
