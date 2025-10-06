@@ -20,9 +20,11 @@ const Referrals = ({ account, connex }) => {
 
       // Filter out the current user
       const filteredUsers = users.filter(user => user.address.toLowerCase() !== account.toLowerCase());
+
       setUsersLookingForReferrals(filteredUsers);
     } catch (error) {
       console.error('Error loading users:', error);
+      setUsersLookingForReferrals([]);
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,7 @@ const Referrals = ({ account, connex }) => {
   if (loading) {
     return (
       <div className="referrals-container">
-        <h2>People Looking for Referrals</h2>
+        <h2>People Looking for Job Referrals</h2>
         <p>Loading...</p>
       </div>
     );
@@ -64,7 +66,7 @@ const Referrals = ({ account, connex }) => {
   if (usersLookingForReferrals.length === 0) {
     return (
       <div className="referrals-container">
-        <h2>People Looking for Referrals</h2>
+        <h2>People Looking for Job Referrals</h2>
         <div className="no-users">
           <p>No users are currently looking for job referrals.</p>
           <p>Check back later!</p>
@@ -75,7 +77,7 @@ const Referrals = ({ account, connex }) => {
 
   return (
     <div className="referrals-container">
-      <h2>People Looking for Referrals</h2>
+      <h2>People Looking for Job Referrals</h2>
       <p className="subtitle">Help connect talented individuals with job opportunities</p>
 
       {!selectedUser ? (
