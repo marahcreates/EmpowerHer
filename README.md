@@ -120,6 +120,8 @@ npm run update:app
 
 ### 4. Start the Application
 
+#### Local Development
+
 ```bash
 # Start backend server
 npm run server
@@ -129,6 +131,22 @@ npm run dev
 ```
 
 Visit `http://localhost:3000` to access the platform.
+
+#### Vercel Deployment
+
+The project is configured to deploy both frontend and backend on Vercel as a single application:
+
+- Frontend is built with Vite and served from the `dist` folder
+- Backend runs as Vercel serverless functions in the `/api` directory
+- No need to set `VITE_API_URL` - API calls automatically use the same domain
+
+**Required Vercel Environment Variables:**
+- `VITE_CONTRACT_ADDRESS` - Your deployed smart contract address
+- `GEMINI_API_KEY` - Google Gemini API key for AI course generation
+- `VEBETTERDAO_APP_ID` - Your VeBetterDAO application ID
+- `MODERATOR_KEY` - Secret key for moderator API authentication
+
+The API endpoints will be available at `https://your-app.vercel.app/api/*`
 
 ## 📖 User Journey
 
