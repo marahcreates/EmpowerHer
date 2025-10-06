@@ -4,37 +4,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Learn2Earn is an educational rewards platform built on VeChain that integrates with VeBetterDAO's X2Earn rewards system. Students pay 1 VET to register, submit learning proofs, and receive B3TR token rewards upon moderator approval.
+EmpowerHer is a blockchain-powered educational platform that empowers women in tech through AI-generated interactive coding courses, learn-to-earn rewards, and job referral incentives distributed via VeChain's B3TR tokens. The platform addresses the gender gap in technology by providing accessible AI-driven coding education with transparent, immutable reward distribution through blockchain.
 
 ## Architecture
 
 ### Three-Tier Architecture
 
 1. **Smart Contract Layer** ([contracts/Learn2Earn.sol](contracts/Learn2Earn.sol))
-   - Handles student registration (1 VET fee), proof submission, and graduation certificates
+   - Handles student registration (1 VET fee), course completion verification, and graduation certificates
    - Integrates with VeBetterDAO's X2EarnRewardsPool to distribute B3TR token rewards
-   - Uses `gradeSubmission()` function to approve submissions and trigger reward distribution
+   - Manages job referral system with confirmation and reward claiming functionality
+   - Uses `gradeSubmission()` function to approve course completions and trigger reward distribution
    - Registrar (contract deployer) has exclusive rights to grade submissions and issue certificates
 
 2. **Backend Service** ([backend/](backend/))
    - Express.js server with SQLite database for submission management
    - Acts as the registrar by calling smart contract functions via VeChain SDK
    - API endpoints for submission CRUD, moderator approval, and reward claiming
+   - AI course generation endpoint using Google Gemini API for dynamic, personalized course creation
    - Moderator authentication using `x-moderator-key` header
 
 3. **Frontend** ([src/](src/))
-   - React + Vite application using VeChain Kit for wallet integration
-   - Component-based flow: WalletConnection → StudentRegistration → ProofSubmission → ClaimReward
+   - React + Vite application using VeChain DApp Kit for wallet integration
+   - Component-based flow: WalletConnection → StudentRegistration → AI Course Generation → Interactive Learning → ClaimReward
+   - AI-powered course interface with real-time code validation and feedback
+   - Job referral system allowing users to refer others and earn B3TR token rewards
    - Checks both backend API and smart contract state to determine user status
 
-### Critical Flow: Reward Distribution
+### Critical Flows
 
-The reward claiming process requires coordination between all layers:
-1. Student submits proof through frontend → Backend stores in SQLite
-2. Moderator approves via API endpoint → Backend updates database
-3. Student clicks "Claim Reward" → Backend calls `gradeSubmission(address, true)` on smart contract as registrar
-4. Smart contract verifies approval state and calls VeBetterDAO's `distributeReward()` to transfer B3TR tokens
-5. Backend records transaction hash and updates claimed status
+**Course Completion & Reward Distribution:**
+1. Student completes AI-generated interactive course modules through frontend
+2. Student submits proof of completion → Backend stores in SQLite
+3. Moderator approves via API endpoint → Backend updates database
+4. Student clicks "Claim Reward" → Backend calls `gradeSubmission(address, true)` on smart contract as registrar
+5. Smart contract verifies approval state and calls VeBetterDAO's `distributeReward()` to transfer B3TR tokens
+6. Backend records transaction hash and updates claimed status
+
+**Job Referral System:**
+1. User refers another registered student for job opportunity via smart contract
+2. Referred student confirms the referral on-chain
+3. Referrer claims 5 B3TR token reward after confirmation
+4. Smart contract prevents double-claiming and ensures fair reward distribution
 
 ## Development Commands
 
@@ -71,6 +82,7 @@ npm run preview                      # Preview production build
 - `MODERATOR_KEY`: Secret key for moderator API authentication
 - `VITE_CONTRACT_ADDRESS`: Deployed contract address (update after deployment)
 - `VEBETTERDAO_APP_ID`: Obtained after running `npm run register:app`
+- `GEMINI_API_KEY`: Google Gemini API key for AI course generation
 
 ### Contract Configuration
 - [src/config/contract.js](src/config/contract.js): Frontend contract address configuration
@@ -78,15 +90,25 @@ npm run preview                      # Preview production build
 
 ## VeChain SDK Integration
 
-### Frontend: VeChain Kit
-- Uses `@vechain/vechain-kit` for wallet connection (VeWorld, Sync2, WalletConnect)
+### Frontend: VeChain DApp Kit
+- Uses `@vechain/dapp-kit` and `@vechain/dapp-kit-react` for wallet connection (VeWorld, Sync2, WalletConnect)
 - Configured with testnet settings in [src/App.jsx](src/App.jsx)
-- Transaction signing handled by VeChainKitProvider
+- Transaction signing handled by VeChainKitProvider with Connex integration
+- Supports smart contract method calls for registration, referrals, and reward claiming
 
 ### Backend: VeChain SDK Core & Network
 - Uses `@vechain/sdk-network` (ThorClient) to interact with VeChain nodes
 - Transaction building with TransactionHandler and manual signing using registrar private key
 - Implements transaction polling in `waitForTransaction()` helper (30s timeout)
+
+## AI Course Generation
+
+### Google Gemini Integration
+- Backend endpoint `/api/generate-course` accepts prompts and generates structured course content
+- Uses Gemini 2.5 Flash model with structured output schema for consistent course format
+- Each AI-generated course includes 5 progressive modules with theory, coding exercises, and solutions
+- Courses are cached in-memory and accessible via unique course IDs
+- Frontend components render interactive coding environments with real-time validation
 
 ## Database Schema
 
@@ -130,6 +152,19 @@ curl -X PUT "http://localhost:3001/api/submissions/{WALLET_ADDRESS}/approve" \
   -d '{"approved": true, "moderatorNotes": "Approved"}'
 ```
 
+## Job Referral System
+
+### Smart Contract Features
+- `referUser(address)`: Allows registered students to refer other registered students
+- `confirmReferral(address)`: Referred student confirms the referral from a specific referrer
+- `claimReferralReward(address)`: Referrer claims 5 B3TR tokens after confirmation
+- `getReferralsReceived(address)`: View all referrals received by a student
+- `getReferralsGiven(address)`: View all referrals given by a student
+
+### Frontend Components
+- [Referrals.jsx](src/components/Referrals.jsx): Browse users seeking job referrals and submit referrals
+- [MyReferrals.jsx](src/components/MyReferrals.jsx): Track referrals given and claim rewards after confirmation
+
 ## Important Technical Notes
 
 - Frontend uses Vite with extensive Node.js polyfills (see [vite.config.js](vite.config.js)) for VeChain SDK compatibility
@@ -137,3 +172,5 @@ curl -X PUT "http://localhost:3001/api/submissions/{WALLET_ADDRESS}/approve" \
 - Backend service acts as the contract registrar for automated reward distribution
 - Students cannot directly call `gradeSubmission()` - only the registrar address can execute grading
 - The contract prevents double rewards using the `rewarded` mapping flag
+- AI-generated courses use unique IDs starting with `ai-` prefix for routing
+- Tailwind CSS v4 requires PostCSS configuration in CommonJS format for Vercel deployment
