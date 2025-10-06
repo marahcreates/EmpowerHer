@@ -1,5 +1,9 @@
 # EmpowerHer - Empowering Women in Tech Through Blockchain Education
 
+## 🌐 [Live Demo](https://empower-her-virid.vercel.app/)
+
+[![EmpowerHer Platform](https://img.shields.io/badge/View%20Live%20Demo-EmpowerHer-D092C3?style=for-the-badge&logo=vercel&logoColor=white)](https://empower-her-virid.vercel.app/)
+
 A blockchain-powered educational platform that empowers women in tech through AI-generated interactive coding courses, learn-to-earn rewards, and job referral incentives distributed via VeChain's B3TR tokens. Built on VeChain and integrated with VeBetterDAO's X2Earn rewards system.
 
 ## 🌟 Project Overview
