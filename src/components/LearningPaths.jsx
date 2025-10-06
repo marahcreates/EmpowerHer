@@ -11,7 +11,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'python-basics',
           title: 'Python Basics',
           description: 'Variables, loops, and conditions',
-          icon: '🐍',
+          icon: '💻',
           difficulty: 'Beginner',
           duration: '5 min',
           reward: '10 B3TR'
@@ -29,7 +29,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'python-functions',
           title: 'Python Functions',
           description: 'Creating reusable code blocks',
-          icon: '⚡',
+          icon: '⚙️',
           difficulty: 'Intermediate',
           duration: '5 min',
           reward: '10 B3TR'
@@ -38,7 +38,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'python-files',
           title: 'File Handling',
           description: 'Reading and writing files',
-          icon: '📁',
+          icon: '📄',
           difficulty: 'Intermediate',
           duration: '5 min',
           reward: '10 B3TR'
@@ -47,7 +47,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'python-oop',
           title: 'OOP Basics',
           description: 'Classes and objects in Python',
-          icon: '🎯',
+          icon: '🏗️',
           difficulty: 'Intermediate',
           duration: '5 min',
           reward: '10 B3TR'
@@ -63,7 +63,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'solidity-basics',
           title: 'Solidity Basics',
           description: 'Variables, types, and syntax',
-          icon: '💎',
+          icon: '🔗',
           difficulty: 'Beginner',
           duration: '5 min',
           reward: '10 B3TR'
@@ -72,7 +72,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'solidity-data-types',
           title: 'Data Types & Structs',
           description: 'Arrays, mappings, and structures',
-          icon: '📊',
+          icon: '🗂️',
           difficulty: 'Beginner',
           duration: '5 min',
           reward: '10 B3TR'
@@ -81,7 +81,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'solidity-functions',
           title: 'Functions & Modifiers',
           description: 'Function types and access control',
-          icon: '⚡',
+          icon: '🔐',
           difficulty: 'Intermediate',
           duration: '5 min',
           reward: '10 B3TR'
@@ -90,7 +90,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'smart-contract-dev',
           title: 'Smart Contract Dev',
           description: 'Events, inheritance, and patterns',
-          icon: '🔨',
+          icon: '📝',
           difficulty: 'Intermediate',
           duration: '5 min',
           reward: '10 B3TR'
@@ -99,7 +99,7 @@ const LearningPaths = ({ onSelectCourse, completedCourses = {} }) => {
           id: 'defi-tokens',
           title: 'DeFi & Token Standards',
           description: 'ERC20, ERC721, and DeFi basics',
-          icon: '🪙',
+          icon: '💰',
           difficulty: 'Advanced',
           duration: '5 min',
           reward: '10 B3TR'

@@ -90,6 +90,7 @@ VITE_CONTRACT_ADDRESS=deployed_contract_address
 # Backend Configuration
 PORT=3001
 MODERATOR_KEY=your-secret-moderator-key-here
+VITE_API_URL=http://localhost:3001  # For production: https://your-backend-url.com
 
 # AI Configuration
 GEMINI_API_KEY=your_gemini_api_key_here

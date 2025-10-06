@@ -103,6 +103,14 @@
   flex-shrink: 0;
 }
 
+.referral-avatar-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
 .referral-info {
   flex: 1;
 }
@@ -162,7 +170,8 @@
 }
 
 .confirm-btn,
-.claim-btn {
+.claim-btn,
+.refer-btn {
   background: #D092C3;
   color: #161315;
   border: none;
@@ -176,17 +185,23 @@
 }
 
 .confirm-btn:hover:not(:disabled),
-.claim-btn:hover:not(:disabled) {
+.claim-btn:hover:not(:disabled),
+.refer-btn:hover:not(:disabled) {
   background: #b877a8;
 }
 
 .confirm-btn:disabled,
-.claim-btn:disabled {
+.claim-btn:disabled,
+.refer-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
 .claim-btn {
+  background: #D092C3;
+}
+
+.refer-btn {
   background: #D092C3;
 }
 
@@ -223,7 +238,8 @@
   }
 
   .confirm-btn,
-  .claim-btn {
+  .claim-btn,
+  .refer-btn {
     align-self: stretch;
   }
 }

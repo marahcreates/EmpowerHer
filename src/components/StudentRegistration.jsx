@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useConnex } from '@vechain/dapp-kit-react';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../config/contract';
+import { API_URL } from '../config/api';
 
 function StudentRegistration({ account, onRegistrationSuccess }) {
   const connex = useConnex();
@@ -133,7 +134,7 @@ function StudentRegistration({ account, onRegistrationSuccess }) {
 
         // Notify backend about registration
         try {
-          await fetch('http://localhost:3001/api/students/register', {
+          await fetch(`${API_URL}/api/students/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ address: account })

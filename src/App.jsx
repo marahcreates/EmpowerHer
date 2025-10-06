@@ -8,6 +8,7 @@ import CourseRouter from './components/CourseRouter';
 import Profile from './components/Profile';
 import Referrals from './components/Referrals';
 import MyReferrals from './components/MyReferrals';
+import { API_URL } from './config/api';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from './config/contract';
 
 function AppContent() {
@@ -19,6 +20,8 @@ function AppContent() {
   const [currentView, setCurrentView] = useState('courses'); // 'courses', 'profile', 'referrals', 'my-referrals'
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [checkingStatus, setCheckingStatus] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [generatingCourse, setGeneratingCourse] = useState(false);
   const connex = useConnex();
   const { account: walletAccount, disconnect } = useWallet();
 
@@ -191,6 +194,36 @@ function AppContent() {
     setSelectedCourse(null);
   };
 
+  const handleGenerateCourse = async () => {
+    if (!aiPrompt.trim()) return;
+
+    setGeneratingCourse(true);
+    try {
+      const response = await fetch(`${API_URL}/api/generate-course`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: aiPrompt }),
+      });
+
+      const data = await response.json();
+
+      if (data.courseId) {
+        // Course generated successfully, redirect to it
+        setSelectedCourse(data.courseId);
+        setAiPrompt('');
+      } else {
+        alert('Failed to generate course. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error generating course:', error);
+      alert('Failed to generate course. Please try again.');
+    } finally {
+      setGeneratingCourse(false);
+    }
+  };
+
   const totalCompleted = Object.values(completedCourses).filter(Boolean).length;
 
   return (
@@ -199,7 +232,7 @@ function AppContent() {
       <header className="dashboard-header">
         <div className="dashboard-header-content">
           <div className="dashboard-logo">
-            <span className="logo-icon">◆</span>
+            <img src="/logo.png" alt="EmpowerHer" className="logo-icon" />
             <span className="logo-text">EmpowerHer</span>
           </div>
 
@@ -299,9 +332,25 @@ function AppContent() {
                     type="text"
                     className="ai-input"
                     placeholder="Generate a course on 'Web Development for Beginners'..."
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && !generatingCourse && aiPrompt.trim()) {
+                        handleGenerateCourse();
+                      }
+                    }}
+                    disabled={generatingCourse}
                   />
-                  <button className="ai-generate-btn">
-                    <span className="sparkle-icon">➤</span>
+                  <button
+                    className="ai-generate-btn"
+                    onClick={handleGenerateCourse}
+                    disabled={!aiPrompt.trim() || generatingCourse}
+                  >
+                    {generatingCourse ? (
+                      <span className="spinner-icon">⟳</span>
+                    ) : (
+                      <span className="sparkle-icon">➤</span>
+                    )}
                   </button>
                 </div>
               </div>
@@ -319,13 +368,13 @@ function AppContent() {
                   onClick={() => setCurrentView('referrals')}
                   className="referral-tab active"
                 >
-                  Invite Friends
+                  Referrals
                 </button>
                 <button
                   onClick={() => setCurrentView('my-referrals')}
                   className="referral-tab"
                 >
-                  My Referrals
+                  Referrals I Gave
                 </button>
               </div>
               <Referrals account={account} connex={connex} />
@@ -339,13 +388,13 @@ function AppContent() {
                   onClick={() => setCurrentView('referrals')}
                   className="referral-tab"
                 >
-                  Invite Friends
+                  Referrals
                 </button>
                 <button
                   onClick={() => setCurrentView('my-referrals')}
                   className="referral-tab active"
                 >
-                  My Referrals
+                  Referrals I Gave
                 </button>
               </div>
               <MyReferrals account={account} connex={connex} />

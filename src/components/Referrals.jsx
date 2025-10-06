@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../config/contract';
+import { API_URL } from '../config/api';
 import '../components/styles/Referrals.css';
 
 const Referrals = ({ account, connex }) => {
@@ -15,7 +16,7 @@ const Referrals = ({ account, connex }) => {
   const loadUsersLookingForReferrals = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:3001/api/referrals/seeking');
+      const response = await fetch(`${API_URL}/api/referrals/seeking`);
       const users = await response.json();
 
       // Filter out the current user

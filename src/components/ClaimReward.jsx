@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../config/contract';
+import { API_URL } from '../config/api';
 
 function ClaimReward({ account }) {
   const [isClaiming, setIsClaiming] = useState(false);
@@ -32,7 +33,7 @@ function ClaimReward({ account }) {
 
     try {
       // Call the backend API to claim the reward
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_BASE_URL = `${API_URL}/api`;
       const response = await fetch(`${API_BASE_URL}/submissions/${account.toLowerCase()}/claim`, {
         method: 'POST',
         headers: {

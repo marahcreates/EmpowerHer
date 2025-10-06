@@ -10,8 +10,28 @@ import SolidityFunctions from './courses/SolidityFunctions';
 import SmartContractDev from './courses/SmartContractDev';
 import DeFiTokens from './courses/DeFiTokens';
 import AICourse from './courses/AICourse';
+import AIInteractiveCourse from './courses/AIInteractiveCourse';
 
 const CourseRouter = ({ courseId, connex, account, onComplete, onBack }) => {
+  // Check if this is an AI-generated course
+  if (courseId?.startsWith('ai-')) {
+    return (
+      <div style={{
+        height: 'calc(100vh - 80px)',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}>
+        <AIInteractiveCourse
+          courseId={courseId}
+          walletAddress={account}
+          onComplete={onComplete}
+          connex={connex}
+          onBack={onBack}
+        />
+      </div>
+    );
+  }
   const ComingSoonPlaceholder = ({ title, color }) => (
     <div style={{
       height: '100%',
